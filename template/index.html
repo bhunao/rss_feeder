@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container pt-5 pb-5">
+
+
+		{% for f in feed["entries"] %}
+
+		<div class="container w-100">
+			<div class="row">
+				<div class="col-10">
+			<div class="card-body">
+				<h5 class="card-title">{{ f['title'] }}</h5>
+				<hr>
+				<p class="card-text">{{ f['summary'] }}</p>
+				<p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+			</div>
+				</div>
+				<div class="col">
+					<img src="{{ f['media_thumbnail'][0]['url'] }}" class="card-img-bottom" alt="..." style="height: 90px;width: 120px;">
+				</div>
+			</div>
+		</div>
+
+		<hr>
+
+		{% endfor %}
+
+
+</div>
+{% endblock %}

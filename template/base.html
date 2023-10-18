@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-bs-theme="">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>bhunao notes</title>
+		<script src="/static/htmx.js"></script>
+		<link href="/static/bootstrap.css" rel="stylesheet">
+	</head>
+	<body>
+
+		<!-- navbar-->
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+			<div class="container">
+				<a class="navbar-brand" href="#!"># notes</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="#!">notes</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#!">.</a>
+						</li>
+						<li class="nav-item">
+							<div class="input-group mb-3 rounded-0">
+								<input type="text" class="form-control rounded-0" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+								<button class="rounded-0 btn btn-outline-light" type="button" id="button-addon1">search</button>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Content-->
+		<div id="content" class="container-fluid px-4 px-lg-5">
+			{% block content %}
+				<div class="container pt-5">
+					<h1>Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</h1>
+					<p> Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. </p>
+					<hr>
+
+					<h3>Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</h3>
+					<p> Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. </p>
+				</div>
+			{% endblock %}
+		</div>
+
+		<script src="static/bootstrap.bundle.js"></script>
+
+	</body>
+</html>
