@@ -3,27 +3,49 @@
 <div class="container pt-5 pb-5">
 
 
-		{% for f in feed["entries"] %}
+	{% for key, val in feed.items() %}
 
-		<div class="container w-100">
-			<div class="row">
-				<div class="col-10">
-			<div class="card-body">
-				<h5 class="card-title">{{ f['title'] }}</h5>
-				<hr>
-				<p class="card-text">{{ f['summary'] }}</p>
-				<p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-			</div>
+	<div class="form-floating mb-3">
+		<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2Disabled" style="height: 100px" disabled>{{ val }}</textarea>
+		<label for="floatingTextarea2Disabled">{{ key }}</label>
+	</div>
+
+	{% endfor %}
+
+	<hr>
+
+	{% for key, val in feed["entries"][0].items() %}
+
+	<div class="form-floating mb-3">
+		<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2Disabled" style="height: 100px" disabled>{{ val }}</textarea>
+		<label for="floatingTextarea2Disabled">{{ key }}</label>
+	</div>
+
+	{% endfor %}
+
+	{% for f in feed["entries"] %}
+
+	<a href="{{ f['link'] }}">
+		<div class="container card rounded-0 w-100 mb-3 p-0 ">
+			<div class="row card-body m-0 p-0">
+				<div class="col-10 w-100 m-0 p-0">
+					<div class="card-body m-0 p-0">
+						<div class="bg-dark text-white w-100 h-100 p-3">
+						<h5 class="card-title m-0 w-100 h-100">{{ f['title'] }}</h5>
+						</div>
+						<hr class="ms-2 me-2">
+						<p class="card-text">{{ f['summary'][:200] }}</p>
+						<p class="card-text m-2"><small class="text-body-secondary">publised date: {{ f['published'] }}</small></p>
+					</div>
 				</div>
 				<div class="col">
-					<img src="{{ f['media_thumbnail'][0]['url'] }}" class="card-img-bottom" alt="..." style="height: 90px;width: 120px;">
+					<img src="{{ f['media_thumbnail'][0]['url'] }}" class="card-img-bottom" alt="..." style="height: 120px;width: 160px;">
 				</div>
 			</div>
 		</div>
+	</a>
 
-		<hr>
-
-		{% endfor %}
+	{% endfor %}
 
 
 </div>
