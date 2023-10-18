@@ -8,13 +8,15 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static/"), name="static")
 templates = Jinja2Blocks(directory="template/")
 
-primetime = "UCUyeluBRhGPCW4rPe_UvBZQ"
-tiojoao = "UC7-Pp09PJX_SYP9oyMzUAtg"
+youtube = "https://www.youtube.com/feeds/videos.xml?channel_id={}"
+primetime = youtube.format("UCUyeluBRhGPCW4rPe_UvBZQ")
+tiojoao = youtube.format("UC7-Pp09PJX_SYP9oyMzUAtg")
+crunchy_anime = "https://feeds.feedburner.com/crunchyroll/rss/anime"
+anime_news = "https://www.animenewsnetwork.com/all/rss.xml?ann-edition=us"
 
 
-def get_youtube_feed(channel_id: str):
-    feed = parse(
-        f"https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}")
+def get_youtube_feed(url: str):
+    feed = parse(url)
     print(feed.keys())
     print(feed['entries'][0].keys())
     return feed
@@ -26,7 +28,7 @@ async def get_all_notes(request: Request):
         "index.html",
         {
             "request": request,
-            "feed": get_youtube_feed(primetime)
+            "feed": get_youtube_feed(crunchy_anime)
         },
         block_name=None
     )
@@ -38,7 +40,7 @@ async def explorer(request: Request):
         "explorer.html",
         {
             "request": request,
-            "feed": get_youtube_feed(primetime)
+            "feed": get_youtube_feed(crunchy_anime)
         },
         block_name=None
     )

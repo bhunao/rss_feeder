@@ -4,23 +4,19 @@
 
 
 	{% for key, val in feed.items() %}
-
-	<div class="form-floating mb-3">
-		<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2Disabled" style="height: 100px" disabled>{{ val }}</textarea>
-		<label for="floatingTextarea2Disabled">{{ key }}</label>
+	<div class="input-group mb-2">
+		<span class="input-group-text rounded-0" id="basic-addon2">{{ key }}</span>
+		<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ val }}" disabled>
 	</div>
-
 	{% endfor %}
 
 	<hr>
 
 	{% for key, val in feed["entries"][0].items() %}
-
-	<div class="form-floating mb-3">
-		<textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2Disabled" style="height: 100px" disabled>{{ val }}</textarea>
-		<label for="floatingTextarea2Disabled">{{ key }}</label>
+	<div class="input-group mb-2">
+		<span class="input-group-text rounded-0" id="basic-addon2">{{ key }}</span>
+		<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ val }}" disabled>
 	</div>
-
 	{% endfor %}
 
 	{% for f in feed["entries"] %}
@@ -38,9 +34,11 @@
 						<p class="card-text m-2"><small class="text-body-secondary">publised date: {{ f['published'] }}</small></p>
 					</div>
 				</div>
+				{% if f.get("media_thumbnail") %}
 				<div class="col">
 					<img src="{{ f['media_thumbnail'][0]['url'] }}" class="card-img-bottom" alt="..." style="height: 120px;width: 160px;">
 				</div>
+				{% endif %}
 			</div>
 		</div>
 	</a>
