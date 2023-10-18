@@ -30,3 +30,15 @@ async def get_all_notes(request: Request):
         },
         block_name=None
     )
+
+
+@app.get("/explorer", response_class=HTMLResponse)
+async def explorer(request: Request):
+    return templates.TemplateResponse(
+        "explorer.html",
+        {
+            "request": request,
+            "feed": get_youtube_feed(primetime)
+        },
+        block_name=None
+    )
