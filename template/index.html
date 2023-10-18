@@ -4,18 +4,18 @@
 
 
 	{% for key, val in feed.items() %}
-	<div class="input-group mb-2">
-		<span class="input-group-text rounded-0" id="basic-addon2">{{ key }}</span>
-		<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ val }}" disabled>
+	<div class="form-floating mb-3">
+		<input type="email" readonly class="form-control-plaintext" id="floatingPlaintextInput" placeholder="name@example.com" value="{{ val }}">
+		<label for="floatingPlaintextInput">{{ key }}</label>
 	</div>
 	{% endfor %}
 
 	<hr>
 
 	{% for key, val in feed["entries"][0].items() %}
-	<div class="input-group mb-2">
-		<span class="input-group-text rounded-0" id="basic-addon2">{{ key }}</span>
-		<input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ val }}" disabled>
+	<div class="form-floating mb-3">
+		<input type="email" readonly class="form-control-plaintext" id="floatingPlaintextInput" placeholder="name@example.com" value="{{ val }}">
+		<label for="floatingPlaintextInput">{{ key }}</label>
 	</div>
 	{% endfor %}
 
