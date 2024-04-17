@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-bs-theme="">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>RSS feeder</title>
+		<script src="/static/htmx.js"></script>
+		<link href="/static/bootstrap.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+	</head>
+	<body>
+
+		<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#"><i class="bi bi-rss-fill pe-3"></i>RSS Feeder</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mx-2 mb-2 mb-lg-0">
+
+						<li class="nav-item">
+							<a class="nav-link active" aria-current="page" href="#">Home</a>
+						</li>
+						<li class="nav-item">
+								<a class="nav-link btn btn-outline-primary" href="#"><i class="bi bi-person-circle"></i></a>
+						</li>
+						<li class="nav-item">
+								<a class="nav-link btn btn-outline-primary" href="#"><i class="bi bi-gear"></i></a>
+						</li>
+					</ul>
+				</div>
+		</nav>
+
+
+		<!-- Content-->
+		<div class="row">
+
+			<div class="col-2 bg-light p-0">
+				<nav class="h-100 flex-column align-items-stretch px-3 border-end">
+					<nav class="nav nav-pills flex-column">
+						<a class="nav-link" href="#item-1"><i class="bi bi-house pe-3"></i>Home</a>
+						<a class="nav-link" href="#item-2"><i class="bi bi-fire pe-3"></i>Popular</a>
+						<a class="nav-link" href="#item-3"><i class="bi bi-search pe-3"></i>Find Tags</a>
+						<nav class="nav nav-pills flex-column">
+							<a class="nav-link ms-3 my-1" href="#item-3-1">AI</a>
+							<a class="nav-link ms-3 my-1" href="#item-3-2">Data Structures</a>
+						</nav>
+					</nav>
+				</nav>
+			</div>
+
+			{% block content %}
+			<div class="col-8 m-0 p-0">
+				<div>
+					<div class="container">
+						<h1>Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</h1>
+						<p> Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. </p>
+						<hr>
+
+						<h3>Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</h3>
+						<p> Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis. </p>
+					</div>
+				</div>
+			</div>
+			{% endblock %}
+
+			<div class="col-2 bg-light p-0">
+				<nav class="h-100 flex-column align-items-stretch px-3 border-start">
+					<nav class="nav nav-pills flex-column pt-3">
+						<h1 class="bi bi-rss-fill pe-3 text-center"></h1>
+							To add a new RSS link, put the link in the input box and click 'Add RSS' . Our system will verify and add the RSS feed to our database.
+						<div class="input-group mb-3">
+							<input type="text" class="form-control" placeholder="rss link..." aria-label="Recipient's username" aria-describedby="button-addon2">
+							<button class="btn btn-primary" type="button" id="button-addon2">Add RSS</button>
+						</div>
+					</nav>
+				</nav>
+				</nav>
+			</div>
+
+
+		</div>
+
+
+		<script src="static/bootstrap.bundle.js"></script>
+
+	</body>
+</html>
