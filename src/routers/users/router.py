@@ -6,15 +6,17 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 from starlette.config import Config
 
-from routers.users.model import Token, User, UserService, get_current_active_user
-from core.database import get_session
+from src.routers.users.model import Token, User, UserService, get_current_active_user
+from src.core.database import get_session
 
 
 config = Config(".env")
 NAME = "User"
 PREFIX = "/user"
 TAGS = ["users"]
-ACCESS_TOKEN_EXPIRE_MINUTES = config("ACCESS_TOKEN_EXPIRE_MINUTES", cast=int)
+ACCESS_TOKEN_EXPIRE_MINUTES = config(
+    "ACCESS_TOKEN_EXPIRE_MINUTES", cast=int, default="30"
+)
 router = APIRouter(prefix=PREFIX, tags=TAGS)
 
 

@@ -13,6 +13,7 @@ cryptography==41.0.7
 jinja2-fragments==1.2.1
 
 # db
+psycopg2-binary==2.9.9
 databases[postgresql]==0.4.2
 alembic==1.4.2
 

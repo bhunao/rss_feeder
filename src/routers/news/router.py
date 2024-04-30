@@ -8,8 +8,8 @@ from sqlmodel import Field, SQLModel, Session
 from jinja2_fragments.fastapi import Jinja2Blocks
 from starlette.config import Config
 
-from core.base_service import BaseService
-from core.database import get_session
+from src.core.base_service import BaseService
+from src.core.database import get_session
 
 
 class News(SQLModel, table=True):
@@ -26,7 +26,7 @@ class NewsSchema(SQLModel):
 
 
 MODEL = News
-templates = Jinja2Blocks(directory="template/")
+templates = Jinja2Blocks(directory="src/template/")
 config = Config(".env")
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/news", tags=["news"])

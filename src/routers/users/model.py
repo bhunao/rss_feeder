@@ -9,8 +9,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 from sqlmodel import SQLModel, Field
 
-from core.base_service import BaseService
-from core.database import get_session
+from src.core.base_service import BaseService
+from src.core.database import get_session
 
 
 class User(SQLModel, table=True):
@@ -40,8 +40,8 @@ class TokenData(SQLModel):
 
 
 config = Config(".env")
-SECRET_KEY = config("SECRET_KEY")
-ALGORITHM = config("ALGORITHM", cast=str)
+SECRET_KEY = config("SECRET_KEY", default="DEFAULT_KEY")
+ALGORITHM = config("ALGORITHM", cast=str, default="HS256")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -86,8 +86,7 @@ class UserService(BaseService):
     @staticmethod
     def get_current_user_from_cookie(access_token: str, session: Session):
         try:
-            payload = jwt.decode(access_token, SECRET_KEY,
-                                 algorithms=[ALGORITHM])
+            payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
             username = payload.get("sub")
             assert isinstance(username, str)
             if username is None:
@@ -98,8 +97,7 @@ class UserService(BaseService):
             print(e)
             raise credentials_exception
 
-        user = UserService(session).search(
-            User.username == token_data.username)
+        user = UserService(session).search(User.username == token_data.username)
         if len(user) < 1 or user is None:
             raise credentials_exception
         user = user[0]
