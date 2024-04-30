@@ -18,6 +18,5 @@ RUN pip install psycopg2-binary
 COPY src src
 RUN ls
 
-EXPOSE 80
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "12345", "--reload"]

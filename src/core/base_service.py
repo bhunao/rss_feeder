@@ -1,29 +1,17 @@
-from sqlalchemy.exc import OperationalError
 import logging
 
-from functools import wraps
-from typing import Generic, List, TypeVar, Union, Callable
+from typing import Generic, List, TypeVar, Union
 
 from fastapi import HTTPException
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlmodel import SQLModel, Session, select
 
+from src.core.dependencies import handle_database_errors
+
 
 logger = logging.getLogger(__name__)
 
 M = TypeVar("M", bound=SQLModel)
-
-
-def handle_database_errors(func: Callable) -> Callable:
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except OperationalError as ex:
-            logger.error(f"database connection error {ex}")
-            return []
-
-    return wrapper
 
 
 class BaseService(Generic[M]):
