@@ -10,15 +10,15 @@ from starlette.datastructures import Secret
 from sqlmodel import create_engine
 from sqlmodel import Session
 
+from src.core.config import config
 
-config = Config(".env")
+
 logging.basicConfig(
     format="[%(asctime)s | %(levelname)s | %(name)s.%(funcName)s]: %(message)s"
 )
 
 POSTGRES_USER = config("POSTGRES_USER", default="USER", cast=str)
-POSTGRES_PASSWORD = config(
-    "POSTGRES_PASSWORD", default="PASSWORD", cast=Secret)
+POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="PASSWORD", cast=Secret)
 POSTGRES_SERVER = config("POSTGRES_SERVER", cast=str, default="db")
 POSTGRES_PORT = config("POSTGRES_PORT", cast=str, default="5432")
 POSTGRES_DB = config("POSTGRES_DB", cast=str, default="default_db")

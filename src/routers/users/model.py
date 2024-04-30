@@ -1,5 +1,4 @@
 from sqlmodel import Session
-from starlette.config import Config
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer
 from typing_extensions import Annotated
@@ -11,6 +10,7 @@ from sqlmodel import SQLModel, Field
 
 from src.core.base_service import BaseService
 from src.core.database import get_session
+from src.core.config import config
 
 
 class User(SQLModel, table=True):
@@ -39,7 +39,6 @@ class TokenData(SQLModel):
 # ======================================================================
 
 
-config = Config(".env")
 SECRET_KEY = config("SECRET_KEY", default="DEFAULT_KEY")
 ALGORITHM = config("ALGORITHM", cast=str, default="HS256")
 

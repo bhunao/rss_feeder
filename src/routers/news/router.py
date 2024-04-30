@@ -5,11 +5,10 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
 from sqlmodel import Field, SQLModel, Session
-from jinja2_fragments.fastapi import Jinja2Blocks
-from starlette.config import Config
 
 from src.core.base_service import BaseService
 from src.core.database import get_session
+from src.core.config import templates
 
 
 class News(SQLModel, table=True):
@@ -26,8 +25,6 @@ class NewsSchema(SQLModel):
 
 
 MODEL = News
-templates = Jinja2Blocks(directory="src/template/")
-config = Config(".env")
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/news", tags=["news"])
 
