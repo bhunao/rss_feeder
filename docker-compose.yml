@@ -4,7 +4,7 @@ services:
   web:
     build: .
     ports:
-      - "12345:12345"
+      - "8777:8777"
     volumes:
       - ./src/:/app/src/
     env_file:
@@ -13,7 +13,6 @@ services:
       - db
 
   pgweb:
-    container_name: pgweb
     restart: always
     image: sosedoff/pgweb
     ports:

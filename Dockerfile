@@ -13,10 +13,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip-compile requirements.in > requirements.txt
 RUN pip install -r requirements.txt
-RUN pip install psycopg2-binary
 
 COPY src src
-RUN ls
 
-
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "12345", "--reload"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8777", "--reload"]
