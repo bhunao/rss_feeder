@@ -4,7 +4,7 @@ from sqlalchemy.exc import OperationalError
 import logging
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from . import database
 
@@ -18,11 +18,11 @@ def handle_database_errors(func: Callable) -> Callable:
         try:
             return func(*args, **kwargs)
         except OperationalError as ex:
-            logger.error(f"database Operational Error error {ex}")
+            logger.error(f"database Operational Error {ex}")
+            raise HTTPException(status_code=500, detail=f"Database Operational Error")
         except Exception as ex:
             logger.error(f"database error {ex}")
-
-        return []
+            raise HTTPException(status_code=500, detail=f"Database Error")
 
     return wrapper
 
