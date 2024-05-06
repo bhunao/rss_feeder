@@ -4,9 +4,7 @@ from fastapi.staticfiles import StaticFiles
 
 from src.core.config import templates
 from src.core.dependencies import lifespan
-from src.routers.news.router import router as news
-from src.routers.news_source.router import router as news_source
-from src.routers.users.router import router as users
+from src.routers import news, news_source, users
 
 
 app = FastAPI(lifespan=lifespan)

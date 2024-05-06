@@ -19,3 +19,4 @@ alembic==1.4.2
 
 # bussiness rules
 feedparser==6.0.10
+requests==2.25.1

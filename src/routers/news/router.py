@@ -1,28 +1,15 @@
 import logging
 
-from typing import Optional
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
-from sqlmodel import Field, SQLModel, Session
+from sqlmodel import Field, Session
 
 from src.core.base_service import BaseService
 from src.core.database import get_session
 from src.core.config import templates
-
-
-class News(SQLModel, table=True):
-    __tablename__ = "news"
-    id: int = Field(default=None, primary_key=True)
-    title: str
-    content: Optional[str] = None
-
-
-class NewsSchema(SQLModel):
-    __tablename__ = "news"
-    title: str
-    content: Optional[str] = None
-
+from src.routers.news.models import News, NewsSchema
 
 MODEL = News
 logger = logging.getLogger(__name__)
@@ -44,6 +31,5 @@ async def read_all(
 
 @router.post("/")
 async def create(post: NewsSchema, session: Session = Depends(get_session)):
-    print(post)
     result = BaseService(MODEL, session).create(post)
     return result
