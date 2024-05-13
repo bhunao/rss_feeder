@@ -20,9 +20,6 @@ def handle_database_errors(func: Callable) -> Callable:
         except OperationalError as ex:
             logger.error(f"database Operational Error {ex}")
             raise HTTPException(status_code=500, detail=f"Database Operational Error")
-        except Exception as ex:
-            logger.error(f"database error {ex}")
-            raise HTTPException(status_code=500, detail=f"Database Error")
 
     return wrapper
 
