@@ -1,3 +1,11 @@
-from src.routers.news.router import router as news
-from src.routers.news_source.router import router as news_source
-from src.routers.users.router import router as users
+from src.routers.articles import router as articles
+from src.routers.sources import router as sources
+from src.routers.users import router as users
+from src.routers.subscriptions import router as subscriptions
+
+routers_list = [
+        articles,
+        sources,
+        users,
+        subscriptions
+        ]

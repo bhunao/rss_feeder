@@ -9,11 +9,11 @@ from sqlmodel import Field, Session
 from src.core.base_service import BaseService
 from src.core.database import get_session
 from src.core.config import templates
-from src.routers.news.models import News, NewsSchema
+from src.models.articles import Article, ArticleSchema
 
-MODEL = News
+MODEL = Article
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/news", tags=["news"])
+router = APIRouter(prefix="/articles", tags=["articles"])
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -30,6 +30,6 @@ async def read_all(
 
 
 @router.post("/")
-async def create(post: NewsSchema, session: Session = Depends(get_session)):
+async def create(post: ArticleSchema, session: Session = Depends(get_session)):
     result = BaseService(MODEL, session).create(post)
     return result

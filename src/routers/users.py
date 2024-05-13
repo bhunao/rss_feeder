@@ -6,7 +6,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 from starlette.config import Config
 
-from src.routers.users.model import Token, User, UserService, get_current_active_user
+from src.models.users import User, UserService, get_current_active_user
+from src.models.tokens import Token
 from src.core.database import get_session
 
 

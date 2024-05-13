@@ -22,23 +22,6 @@ class User(SQLModel, table=True):
     disabled: bool = False
 
 
-class Post(SQLModel):
-    title: str
-    content: Optional[str] = None
-
-
-class Token(SQLModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(SQLModel):
-    username: Optional[str] = None
-
-
-# ======================================================================
-
-
 SECRET_KEY = config("SECRET_KEY", default="DEFAULT_KEY")
 ALGORITHM = config("ALGORITHM", cast=str, default="HS256")
 
