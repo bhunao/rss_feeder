@@ -16,7 +16,6 @@ ITEM_NOT_FOUND = HTTPException(status_code=404, detail="Item not found")
 
 
 class DatabaseModel(SQLModel):
-    __auto_api__ = True
     __router__ = None
     __schema__ = None
 
@@ -25,13 +24,6 @@ class DatabaseModel(SQLModel):
                 prefix=f"/{cls.__tablename__}",
                 tags=[cls.__tablename__]
                 )
-        router = cls.__router__
-        if cls.__auto_api__:
-            create_base_api_routes(
-                    router=cls.__router__,
-                    Model=cls,
-                    Schema=cls.__schema__
-                    )
         new_object = super().__new__(cls)
         return new_object
 

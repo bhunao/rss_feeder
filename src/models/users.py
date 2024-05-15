@@ -1,16 +1,16 @@
-from sqlmodel import Session
-from passlib.context import CryptContext
-from fastapi.security import OAuth2PasswordBearer
-from typing_extensions import Annotated
-from fastapi import Depends, HTTPException, status
-from jose import JWTError, jwt
-from datetime import datetime, timedelta, timezone
 from typing import Optional
-from sqlmodel import SQLModel, Field
+from typing_extensions import Annotated
 
-from src.core.base_service import BaseService
-from src.core.database import get_session
+from datetime import datetime, timedelta, timezone
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from sqlmodel import Session, Field
+
+from src.core.base_service import BaseService, SQLModel
 from src.core.config import config
+from src.core.database import get_session
 
 
 class User(SQLModel, table=True):
