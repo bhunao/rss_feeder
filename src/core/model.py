@@ -6,7 +6,6 @@ from fastapi import HTTPException, APIRouter, Depends
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlmodel import SQLModel, Session, select
 
-from src.core.api_builder import create_base_api_routes
 from src.core.database import get_session
 from src.core.dependencies import handle_database_errors
 

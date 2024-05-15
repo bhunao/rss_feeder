@@ -2,8 +2,9 @@ import logging
 
 from typing import Optional
 
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field
 
+from src.core.database import SQLModel
 from src.core.model import DatabaseModel
 
 
