@@ -8,6 +8,7 @@ from sqlmodel import Session, create_engine
 
 from src.main import app
 from src.core.database import get_session, SQLModel
+from src.routers.database_test import router as database_test_router
 
 BASE_URL = "/example_model"
 sqlite_url = f"sqlite:///./db_test.db"
@@ -23,6 +24,7 @@ def mock_get_session():
         yield session
 
 app.dependency_overrides[get_session] = mock_get_session
+app.include_router(database_test_router)
 client = TestClient(app)
 
 

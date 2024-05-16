@@ -9,5 +9,4 @@ routers_list = [
         sources,
         users,
         subscriptions,
-        database_test
         ]
