@@ -33,7 +33,6 @@ async def update(record: ExampleModel, session: Session = Depends(get_session)):
     result = ExampleModel().update(session, record)
     return result
 
-
 @router.delete("/")
 async def delete(id: int, session: Session = Depends(get_session)):
     result = ExampleModel().delete(session, id)

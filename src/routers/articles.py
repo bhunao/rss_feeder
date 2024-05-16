@@ -11,25 +11,27 @@ from src.core.database import get_session
 from src.core.config import templates
 from src.models.articles import Article, ArticleSchema
 
-MODEL = Article
+
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/articles", tags=["articles"])
-
-
-@router.get("/", response_class=HTMLResponse)
-async def read_all(
-    request: Request,
-    session: Session = Depends(get_session),
-    skip: int = 0,
-    limit: int = 15,
-):
-    result = BaseService(MODEL, session).read_all(skip=skip, limit=limit)
-    return templates.TemplateResponse(
-        "cards/list.html", {"request": request, "items": result}, block_name=None
-    )
+router = Article().__router__
 
 
 @router.post("/")
-async def create(post: ArticleSchema, session: Session = Depends(get_session)):
-    result = BaseService(MODEL, session).create(post)
+async def create(record: ArticleSchema, session: Session = Depends(get_session)):
+    result = Article().create(session, record)
+    return result
+
+@router.get("/")
+async def get(id: int, session: Session = Depends(get_session)):
+    result = Article().get(session, id)
+    return result
+
+@router.post("/update")
+async def update(record: Article, session: Session = Depends(get_session)):
+    result = Article().update(session, record)
+    return result
+
+@router.delete("/")
+async def delete(id: int, session: Session = Depends(get_session)):
+    result = Article().delete(session, id)
     return result

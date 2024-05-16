@@ -1,20 +1,7 @@
-import logging
+from sqlmodel import Field
 
-
-from typing import Optional
-from datetime import datetime
-
-from sqlmodel import Field, SQLModel
-
-
-class Source(SQLModel, table=True):
-    __tablename__ = "sources"
-
-    id: int = Field(default=None, primary_key=True)
-    title: str
-    subtitle: str
-    url: str
-    language: str
+from src.core.database import SQLModel
+from src.core.model import DatabaseModel
 
 
 class SourceSchema(SQLModel):
@@ -23,3 +10,14 @@ class SourceSchema(SQLModel):
     url: str
     language: str
 
+
+class Source(DatabaseModel, table=True):
+    __name__ = "sources"
+    __tablename__ = __name__
+    __schema__ = SourceSchema
+
+    id: int = Field(default=None, primary_key=True)
+    title: str
+    subtitle: str
+    url: str
+    language: str
