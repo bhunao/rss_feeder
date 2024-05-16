@@ -25,7 +25,7 @@ async def create(record: ExampleModelSchema, session: Session = Depends(get_sess
 
 @router.get("/")
 async def get(id: int, session: Session = Depends(get_session)):
-    result = ExampleModel().get(session, id)
+    result = ExampleModel().read(session, id)
     return result
 
 @router.post("/update")
@@ -38,3 +38,11 @@ async def delete(id: int, session: Session = Depends(get_session)):
     result = ExampleModel().delete(session, id)
     return result
 
+@router.get("/all")
+async def get(
+        session: Session = Depends(get_session),
+        skip: int = 0,
+        limit: int = 100
+        ):
+    result = ExampleModel().read_all(session, skip, limit)
+    return result

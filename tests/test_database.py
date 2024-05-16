@@ -1,5 +1,7 @@
 import pytest
 
+from random import randint
+
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 from sqlmodel import Session, create_engine
@@ -149,3 +151,29 @@ def test_delete(setup_db):
     response = client.delete(BASE_URL + f"/?id={id}")
     assert response.status_code == 200
     assert response.json() == response_json
+
+def test_read_all(setup_db):
+    n = 0
+    payload = {
+            "name": f"name-{n}",
+            "favorite_number": n,
+            "date": "2024-05-15"
+            }
+    json_list = []
+    for i in range(10):
+        n = randint(0, 42)
+        create_response = client.post(BASE_URL + "/", json=payload)
+        assert create_response.status_code == 200
+
+        create_json = create_response.json()
+        response_items = set(create_json.items())
+        payload_items = set(payload.items())
+        assert payload_items.issubset(response_items) == True
+        json_list.append(create_json)
+
+    read_all_response = client.get(BASE_URL + "/all")
+    assert read_all_response.status_code == 200
+    for j in json_list:
+        print(j)
+        assert j in read_all_response.json(), f"{j} not inside response json"
+    assert json_list == read_all_response.json()
