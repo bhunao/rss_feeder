@@ -26,8 +26,10 @@ class DatabaseModel(SQLModel):
         new_object = super().__new__(cls)
         return new_object
 
-    def _update_model(self, model: SQLModel, update: SQLModel) -> None:
-        for key, val in update:
+    def _update_model(self, model: SQLModel, values: SQLModel) -> None:
+        for key, val in values:
+            if key.startswith("_"):
+                continue
             model.__setattr__(key, val)
 
     @handle_database_errors
@@ -56,13 +58,11 @@ class DatabaseModel(SQLModel):
         return result
 
     @handle_database_errors
-    def update(self, session: Session, model: SQLModel) -> Any:
-        record = session.get(self.__class__, model.id)
-        if record is None:
-            raise ITEM_NOT_FOUND
-        logger.warning(f"achou {record=}")
-        self._update_model(record, model)
+    def update(self, session: Session, updated_record: SQLModel) -> Any:
+        record = session.get(self.__class__, updated_record.id)
         self._validate_not_empty(record)
+        logger.info(f"{self.__name__} record found {record}")
+        self._update_model(model=record, values=updated_record)
         session.add(record)
         session.commit()
         session.refresh(record)

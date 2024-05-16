@@ -29,7 +29,7 @@ async def get(id: int, session: Session = Depends(get_session)):
     return result
 
 @router.post("/update")
-async def delete(record: ExampleModel, session: Session = Depends(get_session)):
+async def update(record: ExampleModel, session: Session = Depends(get_session)):
     result = ExampleModel().update(session, record)
     return result
 
