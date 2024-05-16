@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 
 from typing import Generic, List, TypeVar, Union, Any
@@ -18,7 +20,7 @@ class DatabaseModel(SQLModel):
     __router__ = None
     __schema__ = None
 
-    def __new__(cls, *args: Any, **kwargs: Any) -> Any:
+    def __new__(cls, *args: Any, **kwargs: Any) -> DatabaseModel:
         cls.__router__ = APIRouter(
                 prefix=f"/{cls.__tablename__}",
                 tags=[cls.__tablename__]
@@ -33,7 +35,7 @@ class DatabaseModel(SQLModel):
             model.__setattr__(key, val)
 
     @handle_database_errors
-    def create(cls, session: Session, record: SQLModel) -> Any:
+    def create(cls, session: Session, record: SQLModel) -> DatabaseModel:
         _new_record = cls.from_orm(record)
         session.add(_new_record)
         session.commit()
@@ -42,7 +44,7 @@ class DatabaseModel(SQLModel):
         return _new_record
 
     @handle_database_errors
-    def get(self, session: Session, id: Union[int, str]) -> Any:
+    def read(self, session: Session, id: Union[int, str]) -> DatabaseModel:
         record = session.get(self.__class__, id)
         if record is None:
             raise ITEM_NOT_FOUND
@@ -51,14 +53,14 @@ class DatabaseModel(SQLModel):
         return record
 
     @handle_database_errors
-    def read(self, session: Session, skip: int = 0, limit: int = 100) -> List[Any]:
+    def read_all(self, session: Session, skip: int = 0, limit: int = 100) -> List[DatabaseModel]:
         query = select(self.__class__).offset(skip).limit(limit)
         result = session.exec(query).all()
         logger.debug(f"read {len(result)} lines from {skip} to {skip+limit}")
         return result
 
     @handle_database_errors
-    def update(self, session: Session, updated_record: SQLModel) -> Any:
+    def update(self, session: Session, updated_record: SQLModel) -> DatabaseModel:
         record = session.get(self.__class__, updated_record.id)
         self._validate_not_empty(record)
         logger.info(f"{self.__name__} record found {record}")
@@ -85,7 +87,7 @@ class DatabaseModel(SQLModel):
         return record
 
     @handle_database_errors
-    def search(self, session: Session, *where: BinaryExpression) -> List[Any]:
+    def search(self, session: Session, *where: BinaryExpression) -> List[DatabaseModel]:
         query = select(self.__class__).where(*where)
         result = session.exec(query).all()
         logger.debug(f"search found {len(result)} lines")

@@ -28,7 +28,7 @@ async def create(record: Schema, session: Session = Depends(get_session)):
 
 @router.get("/")
 async def get(id: int, session: Session = Depends(get_session)):
-    result = Model().get(session, id)
+    result = Model().read(session, id)
     return result
 
 @router.delete("/")

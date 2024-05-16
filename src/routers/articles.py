@@ -23,7 +23,7 @@ async def create(record: ArticleSchema, session: Session = Depends(get_session))
 
 @router.get("/")
 async def get(id: int, session: Session = Depends(get_session)):
-    result = Article().get(session, id)
+    result = Article().read(session, id)
     return result
 
 @router.post("/update")
