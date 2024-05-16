@@ -77,7 +77,8 @@ def test_read(setup_db):
 
     # ==================================================
     # check if record was created
-    response = client.get(BASE_URL + "/?id=1")
+    id = response_json["id"]
+    response = client.get(BASE_URL + f"/?id={id}")
 
     assert response.status_code == 200
 
@@ -85,6 +86,46 @@ def test_read(setup_db):
     response_items = set(response_json.items())
     payload_items = set(payload.items())
     assert payload_items.issubset(response_items) == True
+
+def test_update(setup_db):
+    # ==================================================
+    # create record
+    payload = {
+            "name": "string",
+            "favorite_number": 0,
+            "date": "2024-05-15"
+            }
+    response = client.post(BASE_URL + "/", json=payload)
+    assert response.status_code == 200
+
+    response_json = response.json()
+    response_items = set(response_json.items())
+    payload_items = set(payload.items())
+    assert payload_items.issubset(response_items) == True
+
+    # ==================================================
+    # check if record was created
+    id = response_json["id"]
+    response = client.get(BASE_URL + f"/?id={id}")
+    assert response.status_code == 200
+
+    response_json = response.json()
+    response_items = set(response_json.items())
+    payload_items = set(payload.items())
+    assert payload_items.issubset(response_items) == True
+
+    # ==================================================
+    # update record
+    updated_payload = {
+            "id": id,
+            "name": "stringo",
+            "favorite_number": 4120,
+            "date": "2024-05-15"
+            }
+    print(updated_payload)
+    response = client.post(BASE_URL + "/update", json=updated_payload)
+    assert response.status_code == 200
+    assert response.json() == updated_payload
 
 def test_delete(setup_db):
     # ==================================================
