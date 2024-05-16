@@ -177,3 +177,31 @@ def test_read_all(setup_db):
         print(j)
         assert j in read_all_response.json(), f"{j} not inside response json"
     assert json_list == read_all_response.json()
+
+
+def test_search(setup_db):
+    # ==================================================
+    # create record
+    payload = {
+            "name": "string",
+            "favorite_number": 19,
+            "date": "2024-05-16"
+            }
+    create_response = client.post(BASE_URL + "/", json=payload)
+    assert create_response.status_code == 200
+
+    create_json = create_response.json()
+    response_items = set(create_json.items())
+    payload_items = set(payload.items())
+    assert payload_items.issubset(response_items) == True
+
+    # ==================================================
+    # check if record was created
+    id = create_json["id"]
+    search_response = client.get(BASE_URL + f"/search?name={payload['name']}")
+
+    assert search_response.status_code == 200
+
+    search_json = search_response.json()
+    assert create_json in search_json, "created payload not inside search result"
+
