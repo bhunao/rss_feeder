@@ -6,7 +6,8 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 
-from . import database
+from src.core import database
+from src.core.errors import HTTP500_DATABASE_ERROR
 
 
 logger = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ def handle_database_errors(func: Callable) -> Callable:
             return func(*args, **kwargs)
         except OperationalError as ex:
             logger.error(f"database Operational Error {ex}")
-            raise HTTPException(status_code=500, detail=f"Database Operational Error")
+            raise HTTP500_DATABASE_ERROR
 
     return wrapper
 

@@ -13,25 +13,25 @@ from src.models.articles import Article, ArticleSchema
 
 
 logger = logging.getLogger(__name__)
-router = Article().__router__
+router = Article.create_router()
 
 
 @router.post("/")
 async def create(record: ArticleSchema, session: Session = Depends(get_session)):
-    result = Article().create(session, record)
+    result = Article.create(session, record)
     return result
 
 @router.get("/")
 async def get(id: int, session: Session = Depends(get_session)):
-    result = Article().read(session, id)
+    result = Article.read(session, id)
     return result
 
 @router.post("/update")
 async def update(record: Article, session: Session = Depends(get_session)):
-    result = Article().update(session, record)
+    result = Article.update(session, record)
     return result
 
 @router.delete("/")
 async def delete(id: int, session: Session = Depends(get_session)):
-    result = Article().delete(session, id)
+    result = Article.delete(session, id)
     return result
