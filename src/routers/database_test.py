@@ -1,5 +1,6 @@
-import logging
+import logging, datetime
 
+from typing import Optional, List
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -18,31 +19,48 @@ router = ExampleModel().__router__
 async def home():
     return True
 
-@router.post("/")
+@router.post("/", response_model=ExampleModel)
 async def create(record: ExampleModelSchema, session: Session = Depends(get_session)):
     result = ExampleModel().create(session, record)
     return result
 
-@router.get("/")
+@router.get("/", response_model=ExampleModel)
 async def get(id: int, session: Session = Depends(get_session)):
     result = ExampleModel().read(session, id)
     return result
 
-@router.post("/update")
+@router.post("/update", response_model=ExampleModel)
 async def update(record: ExampleModel, session: Session = Depends(get_session)):
     result = ExampleModel().update(session, record)
     return result
 
-@router.delete("/")
+@router.delete("/", response_model=ExampleModel)
 async def delete(id: int, session: Session = Depends(get_session)):
     result = ExampleModel().delete(session, id)
     return result
 
-@router.get("/all")
-async def get(
+@router.get("/all", response_model=List[ExampleModel])
+async def read_all(
         session: Session = Depends(get_session),
         skip: int = 0,
         limit: int = 100
         ):
     result = ExampleModel().read_all(session, skip, limit)
+    return result
+
+@router.get("/search", response_model=List[ExampleModel])
+async def search(
+        session: Session = Depends(get_session),
+        name: Optional[str] = None,
+        favorite_number: Optional[int] = None,
+        date: Optional[datetime.date] = None,
+        ):
+    where = []
+    if name is not None:
+        where.append(ExampleModel.name == name)
+    if favorite_number is not None:
+        where.append(ExampleModel.favorite_number == favorite_number)
+    if date is not None:
+        where.append(ExampleModel.date == date)
+    result = ExampleModel().search(session, *where)
     return result
