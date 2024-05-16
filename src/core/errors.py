@@ -10,3 +10,8 @@ HTTP500_DATABASE_ERROR = HTTPException(
         status_code=500,
         detail="Database Operational Error"
         )
+
+HTTP400_ALREADY_EXISTS = HTTPException(
+        status_code=400,
+        detail="Item already exists"
+        )

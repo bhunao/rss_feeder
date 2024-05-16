@@ -30,14 +30,11 @@ class Article(DatabaseModel, table=True):
 
     @classmethod
     def create(cls, session: Session, record: SQLModel) -> DatabaseModel:
-        query = select(cls.__class__).filter(
+        query = select(cls).filter(
                 Article.title == record.title,
                 Article.source_id == record.source_id,
                 )
         result = session.exec(query).all()
-        logging.warning(f"algo = {record}")
         if len(result) == 0:
             return cls()
         return super(Article, cls).create(session, record)
-        print("=====================================")
-        logging.warning(f"record created: {new_record}")

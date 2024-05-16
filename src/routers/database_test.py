@@ -25,7 +25,7 @@ async def create(record: ExampleModelSchema, session: Session = Depends(get_sess
     return result
 
 @router.get("/", response_model=ExampleModel)
-async def get(id: int, session: Session = Depends(get_session)):
+async def read(id: int, session: Session = Depends(get_session)):
     result = ExampleModel.read(session, id)
     return result
 

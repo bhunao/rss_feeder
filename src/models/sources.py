@@ -1,4 +1,4 @@
-from sqlmodel import Field
+from sqlmodel import Field, Session, select
 
 from src.core.database import SQLModel
 from src.core.model import DatabaseModel
@@ -21,3 +21,14 @@ class Source(DatabaseModel, table=True):
     subtitle: str
     url: str
     language: str
+
+    @classmethod
+    def create(cls, session: Session, record: SQLModel) -> DatabaseModel:
+        query = select(cls).filter(
+                Source.title == record.title,
+                Source.url == record.url,
+                )
+        result = session.exec(query).all()
+        if len(result) == 0:
+            return cls()
+        return super(Source, cls).create(session, record)

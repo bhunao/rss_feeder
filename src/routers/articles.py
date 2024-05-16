@@ -1,6 +1,7 @@
 import logging
 
 from datetime import datetime
+from typing import List
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse
@@ -22,7 +23,7 @@ async def create(record: ArticleSchema, session: Session = Depends(get_session))
     return result
 
 @router.get("/")
-async def get(id: int, session: Session = Depends(get_session)):
+async def read(id: int, session: Session = Depends(get_session)):
     result = Article.read(session, id)
     return result
 
@@ -34,4 +35,13 @@ async def update(record: Article, session: Session = Depends(get_session)):
 @router.delete("/")
 async def delete(id: int, session: Session = Depends(get_session)):
     result = Article.delete(session, id)
+    return result
+
+@router.get("/all", response_model=List[Article])
+async def read_all(
+        session: Session = Depends(get_session),
+        skip: int = 0,
+        limit: int = 100
+        ):
+    result = Article.read_all(session, skip, limit)
     return result

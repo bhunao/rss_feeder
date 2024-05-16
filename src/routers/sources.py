@@ -3,6 +3,7 @@ import logging
 import feedparser
 import requests
 
+from typing import List
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, Request, BackgroundTasks
@@ -51,7 +52,7 @@ async def create(record: SourceSchema, session: Session = Depends(get_session)):
     return result
 
 @router.get("/")
-async def get(id: int, session: Session = Depends(get_session)):
+async def read(id: int, session: Session = Depends(get_session)):
     result = Source.read(session, id)
     return result
 
@@ -63,4 +64,13 @@ async def update(record: Source, session: Session = Depends(get_session)):
 @router.delete("/")
 async def delete(id: int, session: Session = Depends(get_session)):
     result = Source.delete(session, id)
+    return result
+
+@router.get("/all", response_model=List[Source])
+async def read_all(
+        session: Session = Depends(get_session),
+        skip: int = 0,
+        limit: int = 100
+        ):
+    result = Source.read_all(session, skip, limit)
     return result
