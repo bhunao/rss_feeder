@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse
 from sqlmodel import Field, Session
 
 from src.core.base_service import BaseService
+from src.core.config import templates
 from src.core.database import get_session
 from src.core.config import templates
 from src.models.articles import Article, ArticleSchema
@@ -16,6 +17,12 @@ from src.models.articles import Article, ArticleSchema
 logger = logging.getLogger(__name__)
 router = Article.create_router()
 
+@router.get("/trena", response_class=HTMLResponse)
+async def home(request: Request, session: Session = Depends(get_session)) -> str:
+    result = Article.read_all(session)
+    return templates.TemplateResponse(
+            "cards/list.html", {"request": request, "items": result}, block_name=None
+    )
 
 @router.post("/")
 async def create(record: ArticleSchema, session: Session = Depends(get_session)):
