@@ -9,29 +9,20 @@
 
 		<div class="list-group rounded-0">
 			{% for item in items %}
-			<a href="#" class="list-group-item list-group-item-action text-truncate">
 
-				<div class="container text-center">
-					<div class="row align-items-start">
-						<div class="col-1">
-							<i class="bi bi-bookmark"></i>
-						{{ item.date_published }}
-						</div>
-						<div class="col-1 text-truncate">
-							<span class="badge text-bg-primary">{{ item.id }}</span>
-						</div>
-						<div class="col-4 text-truncate">
-							<strong>
-								{{item.title }}
-							</strong>
-						</div>
-						<div class="col-6 text-truncate">
-							{{ item.summary }}
-						</div>
-					</div>
+		<div class="list-group">
+
+			<a href="#" class="list-group-item list-group-item-action">
+				<div class="d-flex w-100 justify-content-between">
+					<h5 class="mb-1">{{ item.title }}</h5>
+					<small class="text-body-secondary">{{ item.date_published }}</small>
 				</div>
-
+				<p class="mb-1">{{ item.summary }}</p>
+				<small class="text-body-secondary">{{ item.source_id }}</small>
 			</a>
+
+		</div>
+
 			{% endfor %}
 		</div>
 	</div>
