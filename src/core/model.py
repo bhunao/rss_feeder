@@ -45,7 +45,7 @@ class DatabaseModel(SQLModel):
 
     @classmethod
     @handle_database_errors
-    def create(cls, session: Session, record: SQLModel) -> DatabaseModel:
+    def create(cls, session: Session, record: SQLModel) -> DatabaseModel | None:
         _new_record = cls.from_orm(record)
         session.add(_new_record)
         session.commit()
@@ -55,16 +55,17 @@ class DatabaseModel(SQLModel):
 
     @classmethod
     @handle_database_errors
-    def read(cls, session: Session, id: Union[int, str]) -> DatabaseModel:
+    def read(cls, session: Session, id: Union[int, str]) -> DatabaseModel | Exception:
         record = session.get(cls, id)
         if record is None:
+            return HTTP04_ITEM_NOT_FOUND
             raise HTTP04_ITEM_NOT_FOUND
         logger.debug(f"found {cls.__name__} with id {record.id}")
         return record
 
     @classmethod
     @handle_database_errors
-    def read_all(cls, session: Session, skip: int = 0, limit: int = 100) -> List[DatabaseModel]:
+    def read_all(cls, session: Session, skip: int = 0, limit: int = 100) -> List[DatabaseModel] | Exception:
         query = select(cls).offset(skip).limit(limit)
         result = session.exec(query).all()
         logger.debug(f"read {len(result)} lines from {skip} to {skip+limit}")
@@ -72,7 +73,7 @@ class DatabaseModel(SQLModel):
 
     @classmethod
     @handle_database_errors
-    def update(cls, session: Session, updated_record: SQLModel) -> DatabaseModel:
+    def update(cls, session: Session, updated_record: SQLModel) -> DatabaseModel | Exception:
         record = session.get(cls, updated_record.id)
         if record is None:
             raise HTTP04_ITEM_NOT_FOUND
@@ -86,27 +87,15 @@ class DatabaseModel(SQLModel):
 
     @classmethod
     @handle_database_errors
-    def delete(cls, session: Session, id: int) -> SQLModel:
+    def delete(cls, session: Session, id: int) -> DatabaseModel | Exception:
         logger.warning(f"class == {cls}")
         record = session.get(cls, id)
         logger.warning(f"alguma coisa aconteceu aqui {id=}")
         if record is None:
             logger.warning(f"alguma coisa aconteceu aqui {id=}")
             logger.info(f"No row with id '{id}' found in {cls}")
-            raise HTTP04_ITEM_NOT_FOUND
+            return HTTP04_ITEM_NOT_FOUND
         session.delete(record)
         session.commit()
         logger.debug(f"{cls.__name__} with id {id} deleted")
         return record
-
-    @classmethod
-    @handle_database_errors
-    def search(cls, session: Session, *where: BinaryExpression) -> List[DatabaseModel]:
-        ...
-        # === *where is not working properly, is returning no result if more than 1 BinaryExpression
-        # query = select(cls).filter(*where)
-        # for be in where:
-        #     logger.warning(f"====== {be=}")
-        # result = session.exec(query).all()
-        # logger.debug(f"search found {len(result)} lines")
-        # return result
