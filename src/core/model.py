@@ -46,7 +46,7 @@ class DatabaseModel(SQLModel):
     @classmethod
     @handle_database_errors
     def create(cls, session: Session, record: SQLModel) -> DatabaseModel | None:
-        _new_record = cls.from_orm(record)
+        _new_record = cls.model_validate(record)
         session.add(_new_record)
         session.commit()
         session.refresh(_new_record)

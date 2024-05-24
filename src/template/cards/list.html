@@ -1,31 +1,41 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="m-0 px-0 pt-3">
-	<div>
-		<div>
-			<h1 class="container">Feed</h1>
-		</div>
+<div class="container p-5">
+    <h1>Main Content</h1>
+    <p>This is the main content area which takes the remaining space.</p>
+</div>
+<div class="accordion accordion-flush" id="accordionFlushExample">
 
-		<div class="list-group rounded-0">
-			{% for item in items %}
+    {% for item in items %}
 
-		<div class="list-group">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-{{ item.id }}" aria-expanded="false" aria-controls="flush-collapse-{{ item.id }}">
 
-			<a href="#" class="list-group-item list-group-item-action">
-				<div class="d-flex w-100 justify-content-between">
-					<h5 class="mb-1">{{ item.title }}</h5>
-					<small class="text-body-secondary">{{ item.date_published }}</small>
-				</div>
-				<p class="mb-1">{{ item.summary }}</p>
-				<small class="text-body-secondary">{{ item.source_id }}</small>
-			</a>
+                <div class="container">
+                    <div class="row align-items-start">
+                        <div class="col-3">
+                            <strong> {{ item.date_published }} </strong> 
+                        </div>
+                        <div class="col">
+                            {{ item.title }}
+                        </div>
+                    </div>
+                </div>
 
-		</div>
+            </button>
+        </h2>
+        <div id="flush-collapse-{{ item.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ item.id }}">
+            <div class="accordion-body">
 
-			{% endfor %}
-		</div>
-	</div>
+                {{ item.summary | e }}
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
 </div>
 
 {% endblock %}
