@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container p-5">
+    <h1>Main Content</h1>
+    <p>This is the main content area which takes the remaining space.</p>
+</div>
+<div class="accordion accordion-flush" id="accordionFlushSources">
+
+    {% for source_info, records in items.items() %}
+
+    <div class="accordion-item text-white">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-coll-source-{{ source_info[0] }}" aria-expanded="false" aria-controls="flush-coll-source-{{ source_info[0] }}">
+
+                <div class="container">
+                    <div class="row align-items-start">
+                        <div class="col-3">
+                            <strong> {{ source_info[1] }} </strong> 
+                        </div>
+                        <div class="col">
+                            {{ source_info[2] }}
+                        </div>
+                    </div>
+                </div>
+
+            </button>
+        </h2>
+        <div id="flush-coll-source-{{ source_info[0] }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ source_info[0] }}">
+            <div class="accordion-body">
+
+                <div class="accordion accordion-flush" id="accordionFlushExample">
+
+                    {% for item in records %}
+
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-{{ item.id }}" aria-expanded="false" aria-controls="flush-collapse-{{ item.id }}">
+
+                                <div class="container">
+                                    <div class="row align-items-start">
+                                        <div class="col-3">
+                                            <strong> {{ item.date_published }} </strong> 
+                                        </div>
+                                        <div class="col">
+                                            {{ item.title }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </button>
+                        </h2>
+                        <div id="flush-collapse-{{ item.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ item.id }}">
+                            <div class="accordion-body">
+
+                                {{ item.summary | e }}
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+                {% for item in records %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}
