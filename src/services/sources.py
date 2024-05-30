@@ -12,11 +12,11 @@ class SourceService(Service):
 
         query = select(model).where(
                 or_(
-                    Source.url == rec.url,
+                    Source.url == rec.url.strip(),
                     and_(
-                        Source.title == rec.title,
-                        Source.subtitle == rec.subtitle,
-                        Source.language == rec.language
+                        Source.title == rec.title.strip(),
+                        Source.subtitle == rec.subtitle.strip(),
+                        Source.language == rec.language.strip()
                         )
                     )
                 )

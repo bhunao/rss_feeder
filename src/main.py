@@ -24,5 +24,5 @@ for name in dir(routers):
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request) -> str:
     return templates.TemplateResponse(
-        "base.html", {"request": request}, block_name=None
+        "base.html", {"request": request}, block_name=None,
     )

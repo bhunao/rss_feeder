@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container p-5">
+    <h1>Main Content</h1>
+    <p>This is the main content area which takes the remaining space.</p>
+</div>
+<style>
+.smooth {
+  transition: all 1s ease-in;
+}
+</style>
+
+
+<div class="container card bg-dark-subtle m-3 p-5">
+
+    <form class="smooth" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#create_new_source_msg">
+        <div>
+            <label class="form-label" for="title">Source Name:</label>
+            <input class="form-control mb-2" type="text" id="title" name="title">
+        </div>
+        <div>
+            <label class="form-label" for="subtitle">subtitle:</label>
+            <input class="form-control mb-2" id="subtitle" name="subtitle"></input>
+        </div>
+        <div>
+            <label class="form-label" for="url">Source URL:</label>
+            <input class="form-control mb-2" type="text" id="url" name="url">
+        </div>
+        <div>
+            <label class="form-label" for="language">language</label>
+            <input class="form-control mb-4" type="text" id="language" name="language">
+        </div>
+        <div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </form>
+
+</div>
+
+<div id="create_new_source_msg" class="alert alert-danger m-3 smooth" role="alert">
+    MSG goes here
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Subtitle</th>
+            <th scope="col">URL</th>
+            <th scope="col">Language</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for item in items %}
+        <tr>
+            <th scope="row">{{ item.id }}</th>
+            <td>{{ item.title }}</td>
+            <td>{{ item.subtitle }}</td>
+            <td>{{ item.url }}</td>
+            <td>{{ item.language }}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock %}

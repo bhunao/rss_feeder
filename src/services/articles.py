@@ -1,7 +1,9 @@
+from datetime import datetime 
 from typing import List
 from sqlmodel import SQLModel, Session, select
 from src.core.service import Service
 from src.models import Article, Source
+from src.feed_parser import parse_rss_from_url, str_to_date
 
 
 class ArticleService(Service):
@@ -36,3 +38,22 @@ class ArticleService(Service):
                 ).order_by(Article.date_published.desc()).limit(limit)
         result = session.exec(query).all()
         return result
+
+
+    def articles_from_source(self, source: Source):
+        session = self.session
+        parsed_rss = parse_rss_from_url(source.url)
+        for entry in parsed_rss["entries"]:
+            if entry.get("published_parsed", None) is None:
+                published = datetime.now()
+            else:
+                published = str_to_date(entry["published_parsed"])
+            new_record = Article(
+                    source_id=source.id,
+                    title=entry["title"],
+                    summary=entry["summary"],
+                    date_published=published,
+                    image_url="",
+                    )
+            self.create(new_record)
+
