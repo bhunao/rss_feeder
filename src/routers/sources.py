@@ -7,7 +7,7 @@ from typing import List
 from datetime import datetime
 from time import mktime
 
-from fastapi import APIRouter, Depends, Request, BackgroundTasks, Form
+from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse
 from sqlmodel import Session
 
@@ -19,6 +19,8 @@ from src.services.sources import SourceService
 from src.services.articles import ArticleService
 from src.core.errors import HTTP400_ALREADY_EXISTS
 
+from src.feed_parser import parse_rss_from_url
+
 
 NAME = "sources"
 PREFIX = f"/{NAME}"
@@ -26,7 +28,6 @@ TAGS = [NAME]
 
 router = APIRouter(prefix=PREFIX, tags=TAGS)
 logger = logging.getLogger(__name__)
-
 
 @router.get("/", response_class=HTMLResponse)
 async def home(
@@ -39,29 +40,25 @@ async def home(
             )
 
 @router.post("/new")
-async def create(
-        title: str = Form(...),
-        subtitle: str = Form(...),
-        url: str = Form(...),
-        language: str = Form(...),
-        session: Session = Depends(get_session)
-        ):
-    record = Source(
-            title=title, subtitle=subtitle,
-            url=url,
-            language=language
-            )
-    new_source = SourceService(session).create(record)
-    if new_source is None:
+async def create(url: str = Form(...), session: Session = Depends(get_session)):
+    parsed_rss = parse_rss_from_url(url)
+
+    source_service = SourceService(session)
+    article_service = ArticleService(session)
+
+    record = source_service.from_rss(parsed_rss["feed"])
+    if record is None:
         return HTTP400_ALREADY_EXISTS.detail
-    ArticleService(session).articles_from_source(new_source)
-    return new_source
+
+    article_service.articles_from_source(record)
+    return record
 
 @router.get("/refresh")
-async def refresh_source(id: int, bg_task: BackgroundTasks, session: Session = Depends(get_session)):
-    source = SourceService(session).read(id)
+async def refresh_source(id: int, session: Session = Depends(get_session)):
+    source_service = SourceService(session)
     article_service = ArticleService(session)
-    bg_task.add_task(article_service.articles_from_source, source)
+    record = source_service.read(id)
+    article_service.articles_from_source(record)
     return "true"
 # 
 # @router.get("/", response_model=Source)

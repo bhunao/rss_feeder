@@ -16,20 +16,8 @@
 
     <form class="smooth" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#create_new_source_msg">
         <div>
-            <label class="form-label" for="title">Source Name:</label>
-            <input class="form-control mb-2" type="text" id="title" name="title">
-        </div>
-        <div>
-            <label class="form-label" for="subtitle">subtitle:</label>
-            <input class="form-control mb-2" id="subtitle" name="subtitle"></input>
-        </div>
-        <div>
             <label class="form-label" for="url">Source URL:</label>
             <input class="form-control mb-2" type="text" id="url" name="url">
-        </div>
-        <div>
-            <label class="form-label" for="language">language</label>
-            <input class="form-control mb-4" type="text" id="language" name="language">
         </div>
         <div>
             <button class="btn btn-primary" type="submit">Submit</button>
