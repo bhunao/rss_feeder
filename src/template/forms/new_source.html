@@ -2,66 +2,62 @@
 {% block content %}
 
 <div class="container p-5">
-    <h1>Main Content</h1>
-    <p>This is the main content area which takes the remaining space.</p>
+    <h1>Sources</h1>
+
+    <hr>
+
+    <p>Add new source from URL.</p>
+    <div class="card bg-dark-subtle mb-3 p-5">
+        <form id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#create_new_source_msg">
+            <div>
+                <label class="form-label" for="url">Source URL:</label>
+                <input class="form-control mb-2" type="text" id="url" name="url">
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="create_new_source_msg" class="alert alert-danger" role="alert">
+        MSG goes here
+    </div>
+
+    <hr>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Refresh</th>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Subtitle</th>
+                <th scope="col">URL</th>
+                <th scope="col">Language</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for item in items %}
+            <tr id="table_line_{{ item.id }}">
+                <td>
+                    <button class="btn btn-secondary" type="submit" hx-get="/sources/refresh?id={{ item.id }}" hx-target="#refresh_{{ item.id }}">refresh {{ item.id }}</button>
+                    <p id="refresh_{{ item.id }}"></p>
+                </td>
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.title }}</td>
+                <td>{{ item.subtitle }}</td>
+                <td>{{ item.url }}</td>
+                <td>{{ item.language }}</td>
+                <td>
+                    <button class="btn btn-primary" type="submit" hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}">Delete {{ item.id }}</button>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
 </div>
-<style>
-.smooth {
-  transition: all 1s ease-in;
-}
-</style>
-
-
-<div class="container card bg-dark-subtle m-3 p-5">
-
-    <form class="smooth" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#create_new_source_msg">
-        <div>
-            <label class="form-label" for="url">Source URL:</label>
-            <input class="form-control mb-2" type="text" id="url" name="url">
-        </div>
-        <div>
-            <button class="btn btn-primary" type="submit">Submit</button>
-        </div>
-    </form>
-
-</div>
-
-<div id="create_new_source_msg" class="alert alert-danger m-3 smooth" role="alert">
-    MSG goes here
-</div>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Refresh</th>
-            <th scope="col">#</th>
-            <th scope="col">Title</th>
-            <th scope="col">Subtitle</th>
-            <th scope="col">URL</th>
-            <th scope="col">Language</th>
-            <th scope="col">Delete</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        {% for item in items %}
-        <tr id="table_line_{{ item.id }}">
-            <td>
-                <button class="btn btn-secondary" type="submit" hx-get="/sources/refresh?id={{ item.id }}" hx-target="#refresh_{{ item.id }}">refresh {{ item.id }}</button>
-                <p id="refresh_{{ item.id }}"></p>
-            </td>
-            <th scope="row">{{ item.id }}</th>
-            <td>{{ item.title }}</td>
-            <td>{{ item.subtitle }}</td>
-            <td>{{ item.url }}</td>
-            <td>{{ item.language }}</td>
-            <td>
-                <button class="btn btn-primary" type="submit" hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}">Delete {{ item.id }}</button>
-            </td>
-        </tr>
-        {% endfor %}
-
-    </tbody>
-</table>
 
 {% endblock %}

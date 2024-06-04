@@ -1,9 +1,12 @@
+import logging 
+
 from fastapi import BackgroundTasks
 from sqlmodel import SQLModel, Session, select, or_, and_
 
 from src.core.service import Service
 from src.models import Source
 
+logger = logging.getLogger(__name__)
 
 class SourceService(Service):
     def __init__(self, session: Session):

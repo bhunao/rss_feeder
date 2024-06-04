@@ -1,9 +1,14 @@
+import logging 
+
 from datetime import datetime 
 from typing import List
 from sqlmodel import SQLModel, Session, select
 from src.core.service import Service
 from src.models import Article, Source
 from src.feed_parser import parse_rss_from_url, str_to_date
+
+
+logger = logging.getLogger(__name__)
 
 
 class ArticleService(Service):
@@ -50,8 +55,8 @@ class ArticleService(Service):
 
             new_record = Article(
                     source_id=source.id,
-                    title=entry["title"],
-                    summary=entry["summary"],
+                    title=entry.get("title", ""),
+                    summary=entry.get("summary", ""),
                     date_published=published,
                     image_url="",
                     )
