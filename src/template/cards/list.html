@@ -29,7 +29,7 @@
         <div id="flush-collapse-{{ item.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ item.id }}">
             <div class="accordion-body">
 
-                {{ item.summary | e }}
+                {{ item.summary | safe }}
 
             </div>
         </div>

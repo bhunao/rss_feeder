@@ -33,22 +33,31 @@
 <table class="table">
     <thead>
         <tr>
+            <th scope="col">Refresh</th>
             <th scope="col">#</th>
             <th scope="col">Title</th>
             <th scope="col">Subtitle</th>
             <th scope="col">URL</th>
             <th scope="col">Language</th>
+            <th scope="col">Delete</th>
         </tr>
     </thead>
     <tbody>
 
         {% for item in items %}
-        <tr>
+        <tr id="table_line_{{ item.id }}">
+            <td>
+                <button class="btn btn-secondary" type="submit" hx-get="/sources/refresh?id={{ item.id }}" hx-target="#refresh_{{ item.id }}">refresh {{ item.id }}</button>
+                <p id="refresh_{{ item.id }}"></p>
+            </td>
             <th scope="row">{{ item.id }}</th>
             <td>{{ item.title }}</td>
             <td>{{ item.subtitle }}</td>
             <td>{{ item.url }}</td>
             <td>{{ item.language }}</td>
+            <td>
+                <button class="btn btn-primary" type="submit" hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}">Delete {{ item.id }}</button>
+            </td>
         </tr>
         {% endfor %}
 

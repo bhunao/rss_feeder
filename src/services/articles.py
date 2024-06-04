@@ -40,18 +40,14 @@ class ArticleService(Service):
         return result
 
 
-    def articles_from_source(self, source: Source):
+    def articles_from_source(self, source: Source, entries: dict):
         session = self.session
-        print(1, "="*50)
-        parsed_rss = parse_rss_from_url(source.url)
-        print(2, "="*50)
-        for entry in parsed_rss["entries"]:
-            print(2.5, "="*50)
+        for entry in entries:
             if entry.get("published_parsed", None) is None:
                 published = datetime.now()
             else:
                 published = str_to_date(entry["published_parsed"])
-            print(3, "="*50)
+
             new_record = Article(
                     source_id=source.id,
                     title=entry["title"],
@@ -59,7 +55,5 @@ class ArticleService(Service):
                     date_published=published,
                     image_url="",
                     )
-            print(4, "="*50)
             self.create(new_record)
-            print(5, "="*50)
 

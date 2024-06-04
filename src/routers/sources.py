@@ -2,10 +2,12 @@ import logging
 
 import feedparser
 import requests
+import validators
 
 from typing import List
 from datetime import datetime
 from time import mktime
+from urllib.parse import urlparse
 
 from fastapi import APIRouter, Depends, Request, Form
 from fastapi.responses import HTMLResponse
@@ -41,8 +43,14 @@ async def home(
 
 @router.post("/new")
 async def create(url: str = Form(...), session: Session = Depends(get_session)):
-    parsed_rss = parse_rss_from_url(url)
+    if not url.startswith("http"):
+        url = "http://" + url
 
+    is_url_valid = validators.url(url)
+    if not is_url_valid:
+        return f"Invalid URL: '{is_url_valid.args[1]['value']}'"
+
+    parsed_rss = parse_rss_from_url(url)
     source_service = SourceService(session)
     article_service = ArticleService(session)
 
@@ -50,16 +58,20 @@ async def create(url: str = Form(...), session: Session = Depends(get_session)):
     if record is None:
         return HTTP400_ALREADY_EXISTS.detail
 
-    article_service.articles_from_source(record)
+    article_service.articles_from_source(record, parsed_rss['entries'])
     return record
 
 @router.get("/refresh")
 async def refresh_source(id: int, session: Session = Depends(get_session)):
     source_service = SourceService(session)
     article_service = ArticleService(session)
+
     record = source_service.read(id)
-    article_service.articles_from_source(record)
+    parsed_rss = parse_rss_from_url(record.url)
+
+    article_service.articles_from_source(record, parsed_rss['entries'])
     return "true"
+
 # 
 # @router.get("/", response_model=Source)
 # async def read(id: int, session: Session = Depends(get_session)):
@@ -71,10 +83,10 @@ async def refresh_source(id: int, session: Session = Depends(get_session)):
     # result = SourceService(session).update(record)
     # return result
 # 
-# @router.delete("/", response_model=Source)
-# async def delete(id: int, session: Session = Depends(get_session)):
-    # result = SourceService(session).delete(id)
-    # return result
+@router.delete("/", response_model=str)
+async def delete(id: int, session: Session = Depends(get_session)):
+    result = SourceService(session).delete(id)
+    return "DELETED"
 # 
 # @router.get("/all", response_model=List[Source])
 # async def read_all(
