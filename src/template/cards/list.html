@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container p-5">
-    <h1>Main Content</h1>
-    <p>This is the main content area which takes the remaining space.</p>
+<div class="container pb-3">
+    <h1>Articles Ordered by Date</h1>
+    <p>This page displays a list of articles ordered by their publication date. It allows you to easily browse through the most recent articles first.</p>
+
 </div>
-<div class="accordion accordion-flush" id="accordionFlushExample">
+
+<div class="accordion accordion-flush border" id="accordionFlushExample">
 
     {% for item in items %}
 

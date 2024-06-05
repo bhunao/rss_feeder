@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container p-5">
-    <h1>Main Content</h1>
-    <p>This is the main content area which takes the remaining space.</p>
+<div class="container pb-3">
+    <h2>Articles</h2>
+    <p>Within each source section, you’ll find a list of articles that have been published by that source. Each article is presented with the following details:</p>
+    <ul>
+        <li><strong>Publication Date:</strong> The date when the article was published.</li>
+        <li><strong>Title:</strong> The headline or title of the article.</li>
+        <li><strong>Summary:</strong> A brief summary or snippet of the article's content.</li>
+    </ul>
+
 </div>
 
-<div class="accordion accordion-flush border-start border-top border-3" id="accordionFlushSources">
+<div class="accordion accordion-flush border" id="accordionFlushSources">
 
     {% for source_info, records in items.items() %}
 
@@ -30,7 +36,7 @@
         <div id="flush-coll-source-{{ source_info[0] }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ source_info[0] }}">
             <div class="accordion-body">
 
-                <div class="accordion accordion-flush border-start border-top border-3" id="accordionFlushExample">
+                <div class="accordion accordion-flush border" id="accordionFlushExample">
 
                     {% for item in records %}
 
