@@ -1,30 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container p-5">
-    <h1>Sources</h1>
+<h1>Sources</h1>
 
-    <hr>
+<hr>
 
-    <p>Add new source from URL.</p>
-    <div class="card bg-dark-subtle mb-3 p-5">
-        <form id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#create_new_source_msg">
-            <div>
-                <label class="form-label" for="url">Source URL:</label>
-                <input class="form-control mb-2" type="text" id="url" name="url">
-            </div>
-            <div>
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-        </form>
+<h3>How to Add a News Source by URL</h3>
+<p>To add a news source to your News Aggregator, follow these simple steps:</p>
+<ol>
+    <li>Go to the "Add Source" section of the platform.</li>
+    <li>Enter the URL of the news source's RSS feed in the provided field.</li>
+    <li>Click "Submit" to add the source.</li>
+    <li>The system will verify the URL and start fetching articles from this source.</li>
+</ol>
+<p>Once added, articles from the new source will appear in your news feed.</p>
+
+<form class="mb-3 p-3 border" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#create_new_source_msg">
+    <div class="mb-3">
+        <label for="urlInput" class="form-label">New source URL</label>
+        <input type="text" name="url" class="form-control" id="urlInput" aria-describedby="urlHelp">
+        <div id="urlHelp" class="form-text">Enter the url for the new RSS source.</div>
     </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
 
-    <div id="create_new_source_msg" class="alert alert-danger" role="alert">
-        MSG goes here
-    </div>
+<div id="create_new_source_msg" class="alert alert-danger rounded-0" role="alert">
+    MSG goes here
+</div>
 
-    <hr>
-
+<div class="border p-3">
     <table class="table">
         <thead>
             <tr>

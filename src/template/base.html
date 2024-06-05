@@ -11,66 +11,77 @@
     </head>
     <body>
 
-        <!-- Main Content -->
-        <div class="">
-            <div class="row">
-                <div class="col-md-auto p-4" style="background-color: #8796ed;">
-
-                    <span class="display-4 logo">RSS Feeder</span>
-                    <hr>
-
-                    <div class="container-fluid">
-                        <nav class="navbar">
-                            <ul class="navbar-nav">
-
-                                <li class="nav-item border-bottom">
-                                    <a class="nav-link" href="/" role="button">
-                                        Home
-                                    </a>
-                                </li>
-
-                                <li class="nav-item dropdown border-bottom">
-                                    <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Filters
-                                    </a>
-                                    <ul class="dropdown-menu rounded-0">
-                                        <li><a class="dropdown-item" href="/articles">Date<a></li>
-                                        <li><a class="dropdown-item" href="/articles/by_source">Source<a></li>
-                                        <li><a class="dropdown-item" href="/articles">Topic<a></li>
-                                    </ul>
-                                </li>
-
-                                <li class="nav-item border-bottom">
-                                    <a class="nav-link" href="/sources" role="button">
-                                        Sources
-                                    </a>
-                                </li>
-
-                                <li class="nav-item border-bottom">
-                                    <a class="nav-link" href="#" role="button">
-                                        Settings
-                                    </a>
-                                </li>
-
+        <nav class="fixed-top navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">RSS Feeder</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/" role="button">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Articles
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/articles">Date<a></li>
+                                <li><a class="dropdown-item" href="/articles/by_source">Source<a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/articles">Topic<a></li>
                             </ul>
-                        </nav>
-                    </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/sources" role="button">
+                                Sources
+                            </a>
+                        </li>
+                    </ul>
 
-                </div>
-
-                <div class="col container p-0">
-
-                    {% block content %}
-
-                    <h1>Main Content</h1>
-                    <p>This is the main content area which takes the remaining space.</p>
-                    lorem ipsum
-
-                    {% endblock %}
-
+                    <a class="nav-link" href="#" role="button">
+                        Settings
+                    </a>
                 </div>
             </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="col container p-5 p-0 mt-5">
+
+            {% block content %}
+
+
+            <div class="alert alert-primary rounded-0" role="alert">
+                TODO: change this text
+            </div>
+
+            <h1 class="pb-3">News Aggregator</h1>
+            <h2 class="pb-3">Project Overview:</h2>
+            <p>Welcome to the News Aggregator, your ultimate solution for staying informed with the latest news from a wide array of sources. Our platform consolidates articles from numerous publishers, providing you with a comprehensive and personalized news experience.</p>
+
+            <h2 class="pb-3">Key Features:</h2>
+
+            <h3 class="pb-3">Personalized News Feed</h3>
+            <ul>
+                <li><strong>Up-to-Date Articles:</strong> Our news feed brings you the latest articles from all the sources we cover, ensuring you never miss out on current events.</li>
+                <li><strong>Customized Subscriptions:</strong> Tailor your news experience by subscribing to your favorite sources and categories. You'll have a dedicated page that displays articles specifically from your chosen subscriptions, giving you quick access to the news that matters most to you.</li>
+            </ul>
+
+            <h3 class="pb-3">Intelligent News Crawler</h3>
+            <ul>
+                <li><strong>Efficient Parsing:</strong> Our advanced news crawler extracts the key details from each article, including the title, subtitle, and summary. This means you get a concise overview of each story, making it easy to decide what you want to read in full.</li>
+                <li><strong>No Duplicate Content:</strong> We understand the importance of a clean and organized news feed. Our system checks for duplicate articles before adding them to our database, ensuring that you won't see the same article multiple times from the same source.</li>
+            </ul>
+
+            <p>By choosing our News Aggregator, you gain access to a streamlined and personalized news service that keeps you informed and up-to-date with the latest headlines from your favorite sources. Stay ahead of the news curve with ease and efficiency.</p>
+
+
+            {% endblock %}
+
         </div>
+
         <script src="/static/bootstrap.bundle.js"></script>
     </body>
 </html>
