@@ -6,7 +6,7 @@
     <p>This is the main content area which takes the remaining space.</p>
 </div>
 
-<div class="accordion accordion-flush" id="accordionFlushSources">
+<div class="accordion accordion-flush border-start border-top border-3" id="accordionFlushSources">
 
     {% for source_info, records in items.items() %}
 
@@ -30,7 +30,7 @@
         <div id="flush-coll-source-{{ source_info[0] }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlush{{ source_info[0] }}">
             <div class="accordion-body">
 
-                <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion accordion-flush border-start border-top border-3" id="accordionFlushExample">
 
                     {% for item in records %}
 
