@@ -21,7 +21,7 @@
         <input type="text" name="url" class="form-control" id="urlInput" aria-describedby="urlHelp">
         <div id="urlHelp" class="form-text">Enter the url for the new RSS source.</div>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary rounded-0">Submit</button>
 </form>
 
 <div id="create_new_source_msg" class="alert alert-danger rounded-0" role="alert">
@@ -46,7 +46,9 @@
             {% for item in items %}
             <tr id="table_line_{{ item.id }}">
                 <td>
-                    <button class="btn btn-secondary" type="submit" hx-get="/sources/refresh?id={{ item.id }}" hx-target="#refresh_{{ item.id }}">refresh {{ item.id }}</button>
+                    <a hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}" role="button">
+                    <h1><i class="bi bi-arrow-clockwise"></i></h1>
+                    </a>
                     <p id="refresh_{{ item.id }}"></p>
                 </td>
                 <th scope="row">{{ item.id }}</th>
@@ -55,7 +57,9 @@
                 <td>{{ item.url }}</td>
                 <td>{{ item.language }}</td>
                 <td>
-                    <button class="btn btn-primary" type="submit" hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}">Delete {{ item.id }}</button>
+                    <a hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}" role="button">
+                    <h1><i class="bi bi-x-circle-fill"></i></h1>
+                    </a>
                 </td>
             </tr>
             {% endfor %}
