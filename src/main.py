@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 app.mount("/static", StaticFiles(directory="src/static/"), name="static")
 
 for name in dir(routers):
-    if name.startswith("__") or name == "database_test":
+    if name.startswith("__") or name == "asddatabase_test":
         continue
     _router = getattr(routers, name)
     app.include_router(_router)

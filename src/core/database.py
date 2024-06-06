@@ -1,8 +1,8 @@
 import logging
 
-from typing import Generator
+from typing import Generator, TypeVar, List
 
-from sqlmodel import SQLModel
+from sqlmodel import SQLModel, select
 from databases import DatabaseURL
 from starlette.config import Config
 from starlette.datastructures import Secret
@@ -39,3 +39,45 @@ def create_db_and_tables():
 def get_session() -> Generator[Session, None, None]:
     with Session(engine) as session:
         yield session
+
+
+class Database:
+    def __init__(self, session: Session):
+        self.session: Session = session
+
+    def create(self, record: SQLModel, table: SQLModel = None) -> SQLModel:
+        table = table if table else record.__class__
+
+        new_record = table.model_validate(record, from_attributes=True)
+        self.session.add(new_record)
+        self.session.commit()
+        self.session.refresh(new_record)
+        return new_record
+
+    def read(self, table: SQLModel, id: int) -> SQLModel | None:
+        db_record = self.session.get(table, id)
+        return db_record
+
+    def read_all(self, table: SQLModel = None, skip: int = 0, limit: int = 100) -> List[SQLModel]:
+        query = select(table).offset(skip).limit(limit)
+        result = self.session.exec(query).all()
+        return result
+
+    def update(self, record: SQLModel, table: SQLModel = None) -> SQLModel | None:
+        table = table if table else record.__class__
+        db_record = self.session.get(table, record.id)
+        if db_record is None:
+            return None
+        db_record.sqlmodel_update(record)
+        self.session.add(db_record)
+        self.session.commit()
+        self.session.refresh(db_record)
+        return db_record
+
+    def delete(self, table: SQLModel, id: int) -> SQLModel | None:
+        db_record = self.session.get(table, id)
+        if db_record is None:
+            return None
+        self.session.delete(db_record)
+        self.session.commit()
+        return db_record
