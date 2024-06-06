@@ -46,7 +46,7 @@
             {% for item in items %}
             <tr id="table_line_{{ item.id }}">
                 <td>
-                    <a hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}" role="button">
+                    <a hx-get="/sources/refresh?id={{ item.id }}" hx-target="#refresh_{{ item.id }}" role="button">
                     <h1><i class="bi bi-arrow-clockwise"></i></h1>
                     </a>
                     <p id="refresh_{{ item.id }}"></p>
