@@ -28,7 +28,7 @@ async def home(
         ) -> str:
     result = ServiceDatabase(session).read_all(Source)
     return templates.TemplateResponse(
-            "forms/new_source.html", {"request": request, "items": result}, block_name=None
+            "pages/sources.html", {"request": request, "items": result}, block_name=None
             )
 
 @router.post("/new", response_model=Source)

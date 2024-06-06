@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 async def home(request: Request, session: Session = Depends(get_session)) -> str:
     result = ServiceDatabase(session).get_lasts()
     return templates.TemplateResponse(
-            "cards/list.html", {"request": request, "items": result}, block_name=None
+            "pages/articles_by_date.html", {"request": request, "items": result}, block_name=None
     )
 
 @router.get("/by_source")
@@ -35,5 +35,5 @@ async def articles_by_source(request: Request, session: Session = Depends(get_se
         result_dict[tup] = database.get_by_source(source)
 
     return templates.TemplateResponse(
-            "cards/articles_from_source.html", {"request": request, "items": result_dict}, block_name=None
+            "pages/articles_by_source.html", {"request": request, "items": result_dict}, block_name=None
     )
