@@ -15,7 +15,7 @@
 </ol>
 <p>Once added, articles from the new source will appear in your news feed.</p>
 
-<form class="mb-3 p-3 border" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="outerHTML" hx-target="#alert_box">
+<form class="mb-3 p-3 border" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#alert_box">
     <div class="mb-3">
         <label for="urlInput" class="form-label">Add Source</label>
         <input type="text" name="url" class="form-control" id="urlInput" aria-describedby="urlHelp">
@@ -40,25 +40,25 @@
                 <th scope="col">Delete</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody hx-target="closest tr" hx-swap="outerHTML swap:1s">
 
             {% for item in items %}
             <tr id="table_line_{{ item.id }}">
                 <td>
-                    <a hx-get="/sources/refresh?id={{ item.id }}" hx-target="#refresh_{{ item.id }}" role="button">
-                    <h1><i class="bi bi-arrow-clockwise"></i></h1>
-                    </a>
+                    <button class="btn btn-light rounded-0" hx-get="/sources/refresh?id={{ item.id }}">
+                    <h3><i class="bi bi-arrow-clockwise"></i></h3>
                     <p id="refresh_{{ item.id }}"></p>
+                    </button>
                 </td>
                 <th scope="row">{{ item.id }}</th>
                 <td>{{ item.title }}</td>
                 <td>{{ item.subtitle }}</td>
                 <td>{{ item.url }}</td>
                 <td>{{ item.language }}</td>
-                <td>
-                    <a hx-delete="/sources/?id={{ item.id }}" hx-target="#table_line_{{ item.id }}" role="button">
-                    <h1><i class="bi bi-x-circle-fill"></i></h1>
-                    </a>
+                <td hx-confirm="Are you sure?">
+                    <button class="btn btn-light rounded-0" hx-delete="/sources/?id={{ item.id }}">
+                    <h3><i class="bi bi-x-circle-fill"></i></h3>
+                    </button>
                 </td>
             </tr>
             {% endfor %}

@@ -2,7 +2,7 @@ import logging
 
 import validators
 
-from fastapi import APIRouter, Depends, Request, Form
+from fastapi import APIRouter, Depends, Request, Form, Response
 from fastapi.responses import HTMLResponse
 from sqlmodel import Session
 
@@ -42,7 +42,12 @@ async def create(
 
     is_url_valid = validators.url(url)
     if not is_url_valid:
-        return f"Invalid URL: '{is_url_valid.args[1]['value']}'"
+        msg = f"Invalid URL: '{is_url_valid.args[1]['value']}'"
+        return templates.TemplateResponse(
+                "components/alert.html",
+                {"request": request, "alert_type": "danger", "msg": msg},
+                block_name=None
+                )
 
     parsed_rss = get_rss(url)
     database = ServiceDatabase(session)
@@ -52,7 +57,7 @@ async def create(
         msg = HTTP400_ALREADY_EXISTS.detail
         return templates.TemplateResponse(
                 "components/alert.html",
-                {"request": request, "alert_type": "danger", "msg": msg},
+                {"request": request, "alert_type": "warning", "msg": msg},
                 block_name=None
                 )
 
@@ -69,7 +74,7 @@ async def refresh_source(id: int, session: Session = Depends(get_session)):
     ServiceDatabase(session).refresh_articles(source_id=id)
     return "true"
 
-@router.delete("/", response_model=str)
+@router.delete("/")
 async def delete(id: int, session: Session = Depends(get_session)):
     ServiceDatabase(session).delete(Source, id)
-    return "DELETED"
+    return Response()
