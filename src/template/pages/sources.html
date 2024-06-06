@@ -15,7 +15,7 @@
 </ol>
 <p>Once added, articles from the new source will appear in your news feed.</p>
 
-<form class="mb-3 p-3 border" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#create_new_source_msg">
+<form class="mb-3 p-3 border" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="outerHTML" hx-target="#alert_box">
     <div class="mb-3">
         <label for="urlInput" class="form-label">Add Source</label>
         <input type="text" name="url" class="form-control" id="urlInput" aria-describedby="urlHelp">
@@ -24,8 +24,7 @@
     <button type="submit" class="btn btn-primary rounded-0">Submit</button>
 </form>
 
-<div id="create_new_source_msg" class="alert alert-danger rounded-0" role="alert">
-    MSG goes here
+<div id="alert_box">
 </div>
 
 <div class="border p-3">

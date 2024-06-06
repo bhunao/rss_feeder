@@ -31,8 +31,12 @@ async def home(
             "pages/sources.html", {"request": request, "items": result}, block_name=None
             )
 
-@router.post("/new", response_model=Source)
-async def create(url: str = Form(...), session: Session = Depends(get_session)):
+@router.post("/new", response_model=str)
+async def create(
+        request: Request,
+        url: str = Form(...),
+        session: Session = Depends(get_session)
+        ):
     if not url.startswith("http"):
         url = "http://" + url
 
@@ -45,10 +49,20 @@ async def create(url: str = Form(...), session: Session = Depends(get_session)):
 
     record = database.source_from_rss(url, parsed_rss["feed"])
     if record is None:
-        return HTTP400_ALREADY_EXISTS.detail
+        msg = HTTP400_ALREADY_EXISTS.detail
+        return templates.TemplateResponse(
+                "components/alert.html",
+                {"request": request, "alert_type": "danger", "msg": msg},
+                block_name=None
+                )
 
     database.refresh_articles(record.id, parsed_rss['entries'])
-    return record
+    msg = f"'{record.title}' created as a news Source."
+    return templates.TemplateResponse(
+            "components/alert.html",
+            {"request": request, "alert_type": "info", "msg": msg},
+            block_name=None
+            )
 
 @router.get("/refresh")
 async def refresh_source(id: int, session: Session = Depends(get_session)):

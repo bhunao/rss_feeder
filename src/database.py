@@ -39,7 +39,7 @@ class ServiceDatabase(Database):
         result = session.exec(query).all()
         if len(result) > 0:
             return None
-        re = super().create(rec)
+        re = self.create(rec)
         return re
 
     def source_from_rss(self, url: str, parsed_rss: dict) -> Source:
@@ -49,7 +49,7 @@ class ServiceDatabase(Database):
                 url=url,
                 language=parsed_rss["language"]
                 )
-        created_record = self.create(record)
+        created_record = self.create_source(record)
         return created_record
 
     def create_article(self, rec: SQLModel) -> Article | None:
