@@ -1,43 +1,13 @@
-{% extends "base.html" %}
-{% block content %}
-
-<h1>Sources</h1>
-
-<hr>
-
-<div class="container py-2">
-    <div class="row align-items-start">
-        <h3 class="text-center py-1">How to Add a News Source by URL</h3>
-        <hr>
-        <div class="col">
-            <p>To add a news source to your News Aggregator, follow these simple steps:</p>
-            <ol>
-                <li>Go to the "Add Source" section of the platform.</li>
-                <li>Enter the URL of the news source's RSS feed in the provided field.</li>
-                <li>Click "Submit" to add the source.</li>
-                <li>The system will verify the URL and start fetching articles from this source.</li>
-            </ol>
-            <p>Once added, articles from the new source will appear in your news feed.</p>
-        </div>
-        <div class="col">
-            <form class="mb-3 p-3 border" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#sources_table">
-                <div class="mb-3">
-                    <label for="urlInput" class="form-label">Add Source</label>
-                    <input type="text" name="url" class="form-control" id="urlInput" aria-describedby="urlHelp">
-                    <div id="urlHelp" class="form-text">Enter the url for the new RSS source.</div>
-                </div>
-                <button type="submit" class="btn btn-primary rounded-0">Submit</button>
-            </form>
-        </div>
+{% extends "pages/sources.html" %}
+{% block sources_table %}
+<div class="alert alert-{{ alert_type }} rounded-0 hstack gap-3" role="alert">
+    <div class="p-2">
+        {{ msg }}
+    </div>
+    <div class="p-2 ms-auto">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 </div>
-
-
-<div id="sources_table">
-    {% block sources_table %}
-
-    <div id="alert_box">
-    </div>
 
     <div class="border p-3">
         <table class="table">
@@ -48,7 +18,7 @@
                     <th scope="col">Subtitle</th>
                     <th scope="col">URL</th>
                     <th scope="col">Language</th>
-                    <th scope="col">Date Created</th>
+                    <th scope="col">date_created</th>
                     <th scope="col">Refresh</th>
                     <th scope="col">Delete</th>
                 </tr>
@@ -80,8 +50,5 @@
             </tbody>
         </table>
     </div>
-    {% endblock %}
-
-</div>
 
 {% endblock %}

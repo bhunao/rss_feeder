@@ -44,13 +44,18 @@ class ServiceDatabase(Database):
 
     def source_from_rss(self, url: str, parsed_rss: dict) -> Source:
         record = Source(
-                title=parsed_rss["title"],
-                subtitle=parsed_rss["subtitle"],
+                title=parsed_rss.get("title", "NO_TITLE"),
+                subtitle=parsed_rss.get("subtitle", ""),
                 url=url,
                 language=parsed_rss["language"]
                 )
         created_record = self.create_source(record)
         return created_record
+
+    def read_all_sources(self, order_by=Source.date_created, skip: int = 0, limit: int = 100) -> List[SQLModel]:
+        query = select(Source).order_by(order_by.desc()).offset(skip).limit(limit)
+        result = self.session.exec(query).all()
+        return result
 
     def create_article(self, rec: SQLModel) -> Article | None:
         session = self.session

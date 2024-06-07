@@ -27,7 +27,7 @@ class Source(SQLModel, table=True):
     subtitle: str
     url: str = Field(sa_column=Column("url", String, unique=True))
     language: str
-
+    date_created: datetime = Field(default_factory=datetime.now)
 
 class ExampleModelSchema(SQLModel):
     name: str
