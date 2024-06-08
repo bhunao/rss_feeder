@@ -2,6 +2,8 @@ import logging
 
 import validators
 
+from typing import Optional
+
 from fastapi import APIRouter, Depends, Request, Form, Response
 from fastapi.responses import HTMLResponse
 from sqlmodel import Session
@@ -25,8 +27,15 @@ logger = logging.getLogger(__name__)
 async def home(
         request: Request,
         session: Session = Depends(get_session),
+        order_by: Optional[str] = "date_created"
         ) -> str:
-    items = ServiceDatabase(session).read_all_sources()
+
+    valid_cols = Source.schema()['properties'].keys()
+    if order_by not in valid_cols:
+        order_by = "date_created"
+    order_by = getattr(Source, order_by)
+
+    items = ServiceDatabase(session).read_all_sources(order_by)
     page_data = {
             "request": request,
             "items": items,
@@ -44,14 +53,20 @@ async def create(
         request: Request,
         url: str = Form(...),
         session: Session = Depends(get_session)
+        order_by: Optional[str] = "date_created"
         ):
+    valid_cols = Source.schema()['properties'].keys()
+    if order_by not in valid_cols:
+        order_by = "date_created"
+    order_by = getattr(Source, order_by)
+
     if not url.startswith("http"):
         url = "http://" + url
 
     is_url_valid = validators.url(url)
     database = ServiceDatabase(session)
     if not is_url_valid:
-        items = database.read_all_sources()
+        items = database.read_all_sources(order_by)
         msg = f"Invalid URL: '{is_url_valid.args[1]['value']}'"
         page_data = {
                 "request": request,
@@ -69,7 +84,7 @@ async def create(
 
     record = database.source_from_rss(url, parsed_rss["feed"])
     if record is None:
-        items = database.read_all_sources()
+        items = database.read_all_sources(order_by)
         msg = HTTP400_ALREADY_EXISTS.detail
         page_data = {
                 "request": request,
@@ -82,7 +97,7 @@ async def create(
                 )
 
     database.refresh_articles(record.id, parsed_rss['entries'])
-    items = database.read_all_sources()
+    items = database.read_all_sources(order_by)
     msg = f"'{record.title}' created as a news Source."
     page_data = {
             "request": request,
