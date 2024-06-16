@@ -28,7 +28,7 @@ async def home(
 
     db = ServiceDatabase(session)
     for s in db.read_all_sources():
-        logger.debug(f"created background task: REFRESH_SOURCE: '{s.title}'")
+        logger.info(f"created background task: REFRESH_SOURCE: '{s.title}'")
         bg_tasks.add_task(db.refresh_articles, s.id)
 
     result = ServiceDatabase(session).get_lasts()
@@ -44,7 +44,7 @@ async def articles_by_source(
         ) -> str:
     db = ServiceDatabase(session)
     for s in db.read_all_sources():
-        logger.debug(f"created background task: REFRESH_SOURCE: '{s.title}'")
+        logger.info(f"created background task: REFRESH_SOURCE: '{s.title}'")
         bg_tasks.add_task(db.refresh_articles, s.id)
 
     result_dict: Dict[str, Article] = dict()
