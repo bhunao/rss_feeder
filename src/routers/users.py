@@ -9,6 +9,7 @@ from starlette.config import Config
 # from src.models import User, UserService, get_current_active_user
 from src.models import Token
 from src.core.database import get_session
+from src.database import ServiceDatabase
 
 class User(SQLModel):
     id: int
@@ -25,21 +26,23 @@ ACCESS_TOKEN_EXPIRE_MINUTES = config(
 router = APIRouter(prefix=PREFIX, tags=TAGS)
 
 
-# @router.post("/signup", response_model=User)
-# async def signup(
-    # form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    # session: Session = Depends(get_session),
-# ):
-    # user_info = {
-        # "username": form_data.username,
-        # "password": form_data.password,
-        # "disabled": False,
-    # }
+@router.post("/signup", response_model=User)
+async def signup(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    session: Session = Depends(get_session),
+):
+    db = ServiceDatabase(session)
+    user_info = {
+        "username": form_data.username,
+        "password": form_data.password,
+        "disabled": False,
+    }
 
-    # new_user = User(**user_info)
-    # result = UserService(session).create(new_user)
-    # return result
-    # return
+    new_user = User(**user_info)
+
+    result = db.create(new_user, User)
+    #result = UserService(session).create(new_user)
+    return result
 
 
 # @router.post("/login", response_model=Token)

@@ -14,8 +14,9 @@ from src.core.config import config
 
 
 logging.basicConfig(
-    format="[%(asctime)s | %(levelname)s | %(name)s.%(funcName)s]: %(message)s"
-)
+        level=logging.INFO,
+        format="[%(asctime)s | %(levelname)s | %(name)s.%(funcName)s]: %(message)s"
+        )
 
 POSTGRES_USER = config("POSTGRES_USER", default="USER", cast=str)
 POSTGRES_PASSWORD = config("POSTGRES_PASSWORD", default="PASSWORD", cast=Secret)
