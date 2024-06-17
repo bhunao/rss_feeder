@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi import HTTPException
-from sqlmodel import Field, Session, select
+from sqlmodel import Field, Relationship
 from sqlalchemy import UniqueConstraint, Column, String
 
 from src.core.database import SQLModel
@@ -28,6 +28,7 @@ class Source(SQLModel, table=True):
     url: str = Field(sa_column=Column("url", String, unique=True))
     language: str
     date_created: datetime = Field(default_factory=datetime.now)
+    articles: list["Article"] = Relationship(back_populates="source")
 
 class ExampleModelSchema(SQLModel):
     name: str
@@ -61,6 +62,8 @@ class Article(SQLModel, table=True):
     date_published: datetime
     summary: str
     image_url: str
+
+    source: Source | None = Relationship(back_populates="articles")
 
 
 class SubscriptionSchema(SQLModel):

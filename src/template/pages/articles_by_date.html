@@ -18,10 +18,13 @@
                 <div class="container">
                     <div class="row align-items-start">
                         <div class="col-3">
-                            <strong> {{ item.date_published }} </strong> 
+                            <strong> {{ item.source.title }} </strong>
                         </div>
                         <div class="col">
                             {{ item.title }}
+                        </div>
+                        <div class="col-3">
+                            <small> {{ item.date_published }} </small>
                         </div>
                     </div>
                 </div>

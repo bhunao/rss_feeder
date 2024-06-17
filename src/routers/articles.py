@@ -1,5 +1,7 @@
 import logging
 
+from typing import Dict
+
 from fastapi import APIRouter, Depends, Request, BackgroundTasks
 from fastapi.responses import HTMLResponse
 from sqlmodel import Session
@@ -32,6 +34,9 @@ async def home(
         bg_tasks.add_task(db.refresh_articles, s.id)
 
     result = ServiceDatabase(session).get_lasts()
+    print("======= source")
+    print(result[1].source.title)
+    print("=======")
     return templates.TemplateResponse(
             "pages/articles_by_date.html", {"request": request, "items": result}, block_name=None
     )
