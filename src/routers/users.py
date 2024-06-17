@@ -1,13 +1,12 @@
-from datetime import datetime, timedelta, timezone
-from typing import Annotated, Optional
+from typing import Annotated
 
-from fastapi import Cookie, Depends, HTTPException, Response, status, APIRouter
+from fastapi import Depends, APIRouter, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session, SQLModel
 from starlette.config import Config
 
 # from src.models import User, UserService, get_current_active_user
-from src.models import Token
+from src.core.config import templates
 from src.core.database import get_session
 from src.database import ServiceDatabase
 
@@ -18,7 +17,7 @@ class User(SQLModel):
 
 config = Config(".env")
 NAME = "User"
-PREFIX = "/user"
+PREFIX = "/users"
 TAGS = ["users"]
 ACCESS_TOKEN_EXPIRE_MINUTES = config(
     "ACCESS_TOKEN_EXPIRE_MINUTES", cast=int, default="30"
@@ -26,23 +25,27 @@ ACCESS_TOKEN_EXPIRE_MINUTES = config(
 router = APIRouter(prefix=PREFIX, tags=TAGS)
 
 
-@router.post("/signup", response_model=User)
+@router.get("/signup", response_model=User)
 async def signup(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    session: Session = Depends(get_session),
-):
+        request: Request,
+        # form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        session: Session = Depends(get_session),
+        ):
     db = ServiceDatabase(session)
-    user_info = {
-        "username": form_data.username,
-        "password": form_data.password,
-        "disabled": False,
-    }
+    # user_info = {
+    #         "username": form_data.username,
+    #         "password": form_data.password,
+    #         "disabled": False,
+    #         }
 
-    new_user = User(**user_info)
+    # new_user = User(**user_info)
 
-    result = db.create(new_user, User)
+    # result = db.create(new_user, User)
     #result = UserService(session).create(new_user)
-    return result
+    #return result
+    return templates.TemplateResponse(
+            "pages/signup.html", {"request": request}, block_name=None,
+            )
 
 
 # @router.post("/login", response_model=Token)
@@ -72,7 +75,7 @@ async def signup(
     # )
     # return {"access_token": access_token, "token_type": "bearer"}
     # return
-# 
+#
 # @router.post("/logout")
 # async def logout(
     # response: Response,
@@ -84,7 +87,7 @@ async def signup(
     # user = UserService.get_current_user_from_cookie(access_token, session)
     # if not user:
         # return {"msg": "you're not logged in."}
-# 
+#
     # response.delete_cookie(key="access_token")
     # return {"msg": f"logged out as {user.username}"}
     # return
