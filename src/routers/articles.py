@@ -23,30 +23,25 @@ logger = logging.getLogger(__name__)
 
 @router.get("/", response_class=HTMLResponse)
 async def home(
-        request: Request,
-        bg_tasks: BackgroundTasks,
-        session: Session = Depends(get_session)
-        ) -> str:
-
+    request: Request, bg_tasks: BackgroundTasks, session: Session = Depends(get_session)
+) -> str:
     db = ServiceDatabase(session)
     for s in db.read_all_sources():
         logger.info(f"created background task: REFRESH_SOURCE: '{s.title}'")
         bg_tasks.add_task(db.refresh_articles, s.id)
 
     result = ServiceDatabase(session).get_lasts()
-    print("======= source")
-    print(result[1].source.title)
-    print("=======")
     return templates.TemplateResponse(
-            "pages/articles_by_date.html", {"request": request, "items": result}, block_name=None
+        "pages/articles_by_date.html",
+        {"request": request, "items": result},
+        block_name=None,
     )
+
 
 @router.get("/by_source")
 async def articles_by_source(
-        request: Request,
-        bg_tasks: BackgroundTasks,
-        session: Session = Depends(get_session)
-        ) -> str:
+    request: Request, bg_tasks: BackgroundTasks, session: Session = Depends(get_session)
+) -> str:
     db = ServiceDatabase(session)
     for s in db.read_all_sources():
         logger.info(f"created background task: REFRESH_SOURCE: '{s.title}'")
@@ -58,5 +53,7 @@ async def articles_by_source(
         result_dict[tup] = db.get_by_source(source)
 
     return templates.TemplateResponse(
-            "pages/articles_by_source.html", {"request": request, "items": result_dict}, block_name=None
+        "pages/articles_by_source.html",
+        {"request": request, "items": result_dict},
+        block_name=None,
     )

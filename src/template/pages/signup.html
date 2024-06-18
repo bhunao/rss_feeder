@@ -11,33 +11,33 @@
             <div class="card rounded-0">
                 <div class="card-body">
                     <h6 class="card-title text-center">Sign Up</h5>
-                    <form>
+                    <form hx-post="/users/signup">
                         <div class="form-group mb-2">
                             <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" placeholder="Enter username">
+                            <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required>
                         </div>
                         <div class="form-group mb-2">
                             <label for="email">Email address</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter email">
+                            <input type="email" class="form-control" id="email" placeholder="Enter email" required>
                         </div>
                         <hr>
                         <div class="form-group mb-2">
                             <label for="password">Password</label>
                             <div class="input-group mb-2">
-                                <input id="password" type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="show-password">
+                                <input id="password" name="password" type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="show-password" required>
                                 <button class="btn btn-outline-secondary bi bi-eye" type="button" id="show-password"></button>
                             </div>
                         </div>
                         <div class="form-group mb-2">
                             <label for="confirm-password">Confirm Password</label>
                             <div class="input-group mb-2">
-                                <input id="confirm-password" type="password" class="form-control" placeholder="Confirm Password" aria-label="Confirm Password" aria-describedby="show-password">
+                                <input id="confirm-password" type="password" class="form-control" placeholder="Confirm Password" aria-label="Confirm Password" aria-describedby="show-password" required>
                                 <button class="btn btn-outline-secondary bi bi-eye" type="button" id="show-password"></button>
                             </div>
                         </div>
 
                         <div class="form-check mb-2">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck2">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck2" required>
                             <label class="form-check-label" for="exampleCheck2">I agree with all this stuff #TODO: ADD HERE</label>
                         </div>
 
