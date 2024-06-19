@@ -12,6 +12,7 @@
                 <div class="card-body">
                     <h6 class="card-title text-center">ME</h5>
                     {{ user.email }}
+                    <button hx-post="/user/logout" type="submit" class="btn btn-secondary m-2">Logout</button>
                 </div>
             </div>
         </div>
