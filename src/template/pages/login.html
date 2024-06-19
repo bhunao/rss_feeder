@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>New User</h1>
+<h2>Login Page</h1>
 
 <hr>
 
@@ -11,16 +11,11 @@
             <div class="card rounded-0">
                 <div class="card-body">
                     <h6 class="card-title text-center">Sign Up</h5>
-                    <form hx-post="/user/signup">
+                    <form hx-post="/user/login" hx-target="#page">
                         <div class="form-group mb-2">
                             <label for="username">Username</label>
                             <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" >
                         </div>
-                        <div class="form-group mb-2">
-                            <label for="email">Email address</label>
-                            <input name="email" type="email" class="form-control" id="email" placeholder="Enter email" >
-                        </div>
-                        <hr>
                         <div class="form-group mb-2">
                             <label for="password">Password</label>
                             <div class="input-group mb-2">
@@ -28,21 +23,8 @@
                                 <button class="btn btn-outline-secondary bi bi-eye" type="button" id="show-password"></button>
                             </div>
                         </div>
-                        <div class="form-group mb-2">
-                            <label for="confirm-password">Confirm Password</label>
-                            <div class="input-group mb-2">
-                                <input id="confirm-password" type="password" class="form-control" placeholder="Confirm Password" aria-label="Confirm Password" aria-describedby="show-password" >
-                                <button class="btn btn-outline-secondary bi bi-eye" type="button" id="show-password"></button>
-                            </div>
-                        </div>
-
-                        <div class="form-check mb-2">
-                            <input type="checkbox" class="form-check-input" id="exampleCheck2" >
-                            <label class="form-check-label" for="exampleCheck2">I agree with all this stuff #TODO: ADD HERE</label>
-                        </div>
-
                         <div class="text-center m-2">
-                            <button type="submit" class="btn btn-primary m-2">Sign Up</button>
+                            <button type="submit" class="btn btn-primary m-2">Login</button>
                             <button type="submit" class="btn btn-secondary m-2">Cancel</button>
                         </div>
 

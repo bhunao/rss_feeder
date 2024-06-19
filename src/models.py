@@ -20,7 +20,7 @@ class SourceSchema(SQLModel):
 
 
 class Source(SQLModel, table=True):
-    __tablename__  = "sources"
+    __tablename__ = "sources"
 
     id: int = Field(default=None, primary_key=True)
     title: str
@@ -29,6 +29,7 @@ class Source(SQLModel, table=True):
     language: str
     date_created: datetime = Field(default_factory=datetime.now)
     articles: list["Article"] = Relationship(back_populates="source")
+
 
 class ExampleModelSchema(SQLModel):
     name: str
@@ -72,7 +73,7 @@ class SubscriptionSchema(SQLModel):
 
 
 class Subscription(SQLModel, table=True):
-    __tablename__  = "subscriptions"
+    __tablename__ = "subscriptions"
 
     id: Optional[int] = Field(nullable=False, primary_key=True)
     user_id: int
@@ -80,7 +81,7 @@ class Subscription(SQLModel, table=True):
 
 
 class User(SQLModel, table=True):
-    id: Optional[int] = Field(nullable=False, primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     username: str = Field(unique=True)
     password: str
     email: Optional[str] = None

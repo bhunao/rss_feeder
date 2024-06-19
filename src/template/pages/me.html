@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>User: {{ user.username }}</h1>
+
+<hr>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card rounded-0">
+                <div class="card-body">
+                    <h6 class="card-title text-center">ME</h5>
+                    {{ user.email }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
