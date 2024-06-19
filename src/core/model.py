@@ -2,15 +2,13 @@ from __future__ import annotations
 
 import logging
 
-from typing import Generic, List, TypeVar, Union, Any
+from typing import List, Union, Any
 
-from fastapi import HTTPException, APIRouter, Depends
-from sqlalchemy.sql.elements import BinaryExpression
+from fastapi import APIRouter
 from sqlmodel import Session, select
 
-from src.core.database import get_session, SQLModel
+from src.core.database import SQLModel
 from src.core.dependencies import handle_database_errors
-from src.core.errors import HTTP404_ITEM_NOT_FOUND
 
 
 logger = logging.getLogger(__name__)
@@ -23,16 +21,16 @@ class DatabaseModel(SQLModel):
     @classmethod
     def create_router(cls) -> APIRouter:
         cls.__router__ = APIRouter(
-                prefix=f"/{cls.__tablename__}",
-                tags=[cls.__tablename__]
-                )
+            prefix=f"/{cls.__tablename__}",
+            tags=[cls.__tablename__]
+        )
         return cls.__router__
 
     def __new__(cls, *args: Any, **kwargs: Any) -> DatabaseModel:
         cls.__router__ = APIRouter(
-                prefix=f"/{cls.__tablename__}",
-                tags=[cls.__tablename__]
-                )
+            prefix=f"/{cls.__tablename__}",
+            tags=[cls.__tablename__]
+        )
         new_object = super().__new__(cls)
         return new_object
 

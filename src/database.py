@@ -60,7 +60,8 @@ class ServiceDatabase(Database):
     def read_all_sources(
         self, order_by=Source.date_created, skip: int = 0, limit: int = 100
     ) -> List[SQLModel]:
-        query = select(Source).order_by(order_by.desc()).offset(skip).limit(limit)
+        query = select(Source).order_by(
+            order_by.desc()).offset(skip).limit(limit)
         result = self.session.exec(query).all()
         return result
 
@@ -76,7 +77,8 @@ class ServiceDatabase(Database):
         return super().create(rec)
 
     def get_lasts(self, limit=100) -> List[Article]:
-        query = select(Article).order_by(Article.date_published.desc()).limit(limit)
+        query = select(Article).order_by(
+            Article.date_published.desc()).limit(limit)
         result = self.session.exec(query).all()
         return result
 
@@ -96,7 +98,6 @@ class ServiceDatabase(Database):
             rss = get_rss(source.url)
             entries = rss["entries"]
 
-        session = self.session
         for entry in entries:
             if entry.get("published_parsed", None) is None:
                 published = datetime.now()
@@ -161,7 +162,8 @@ class UserDatabase(Database):
 
     def get_current_user_from_cookie(self, access_token: str):
         try:
-            payload = jwt.decode(access_token, SECRET_KEY, algorithms=[ALGORITHM])
+            payload = jwt.decode(access_token, SECRET_KEY,
+                                 algorithms=[ALGORITHM])
             username = payload.get("sub")
             assert isinstance(username, str)
             if username is None:

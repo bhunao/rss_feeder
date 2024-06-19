@@ -13,17 +13,14 @@ from fastapi import (
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import RedirectResponse
-from sqlmodel import Session, SQLModel
+from sqlmodel import Session
 
-# from src.models import User, UserService, get_current_active_user
 from src.core.config import templates, config
 from src.core.database import get_session
 from src.database import (
-    ServiceDatabase,
     UserDatabase,
-    get_current_user,
 )
-from src.models import User, Token
+from src.models import User
 
 
 NAME = "User"

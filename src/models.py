@@ -1,15 +1,11 @@
+from datetime import date
 from datetime import datetime
+from typing import Optional
 
-from fastapi import HTTPException
+from sqlalchemy import Column, String
 from sqlmodel import Field, Relationship
-from sqlalchemy import UniqueConstraint, Column, String
 
 from src.core.database import SQLModel
-
-from typing import Optional
-from datetime import date
-
-from sqlmodel import Field, SQLModel
 
 
 class SourceSchema(SQLModel):

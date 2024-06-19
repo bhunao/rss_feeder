@@ -8,8 +8,7 @@ from sqlmodel import Session
 
 from src.core.config import templates
 from src.core.database import get_session
-from src.core.config import templates
-from src.models import Article, ArticleSchema, Source
+from src.models import Article, Source
 from src.database import ServiceDatabase
 
 
