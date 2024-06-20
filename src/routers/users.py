@@ -17,9 +17,7 @@ from sqlmodel import Session
 
 from src.core.config import templates, config
 from src.core.database import get_session
-from src.database import (
-    UserDatabase,
-)
+from src.database import ServiceDatabase as Database
 from src.models import User
 
 
@@ -52,7 +50,7 @@ async def signup_form(
     password: str = Form(...),
     session: Session = Depends(get_session),
 ):
-    db = UserDatabase(session)
+    db = Database(session)
     new_user = User(
         username=username,
         email=email,
@@ -81,11 +79,8 @@ async def login_form(
     form: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: Session = Depends(get_session),
 ):
-    db = UserDatabase(session)
+    db = Database(session)
     user = db.authenticate_user(form.username, form.password)
-    print("================")
-    print(f"{user=}", type(user))
-    print("================")
 
     if not user:
         raise HTTPException(
@@ -94,7 +89,7 @@ async def login_form(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = UserDatabase.create_access_token(
+    access_token = Database.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     response.set_cookie(
@@ -120,7 +115,7 @@ async def logout(
     if access_token is None:
         return {"msg": "you're not logged in."}
 
-    db = UserDatabase(session)
+    db = Database(session)
     user = db.get_current_user_from_cookie(access_token)
     if not user:
         return {"msg": "you're not logged in."}
@@ -135,9 +130,7 @@ async def read_users_me(
     access_token: str = Cookie(None),
     session: Session = Depends(get_session),
 ):
-    db = UserDatabase(session)
-    print("========-------------======")
-    print(access_token)
+    db = Database(session)
     if not access_token:
         return RedirectResponse("/user/login")
 

@@ -4,7 +4,7 @@ from sqlalchemy.exc import OperationalError
 import logging
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 
 from src.core import database
 from src.core.errors import HTTP500_DATABASE_ERROR
@@ -35,4 +35,4 @@ async def lifespan(app: FastAPI):
 
     assert app is not None
     yield
-    print("closing")
+    logger.info("closing application lifespan.")

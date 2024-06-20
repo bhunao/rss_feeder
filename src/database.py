@@ -15,10 +15,12 @@ from fastapi.security import OAuth2PasswordBearer
 from src.core.database import Database, get_session
 from src.core.errors import HTTP401_INVALID_CREDENTIALS
 from src.models import Source, Article, User, TokenData
-from src.core.config import config
+from src.core.config import SECRET_KEY, ALGORITHM
 
 
 logger = logging.getLogger(__name__)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 
 
 def get_rss(url: str) -> dict:
@@ -118,16 +120,6 @@ class ServiceDatabase(Database):
                     f"new article sucessfully created with id '{record.id}' and title '{record.title}'"
                 )
 
-
-# USER ==============================================
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
-
-SECRET_KEY = config("SECRET_KEY", default="DEFAULT_KEY")
-ALGORITHM = config("ALGORITHM", cast=str, default="HS256")
-
-
-class UserDatabase(Database):
     def get_user(self, username: Optional[str] = None):
         query = select(User).where(User.username == username)
         user = self.session.exec(query).one_or_none()
@@ -170,8 +162,7 @@ class UserDatabase(Database):
                 raise HTTP401_INVALID_CREDENTIALS
             token_data = TokenData(username=username)
         except JWTError as e:
-            print("=" * 100)
-            print(e)
+            logger.error(e)
             raise HTTP401_INVALID_CREDENTIALS
 
         user = self.get_user(token_data.username)
@@ -185,9 +176,6 @@ async def get_current_user(
     session: Session = Depends(get_session),
     access_token: str = Cookie(None),
 ):
-    print("dsfkgjdsfçgjsdfçlgkjsdfçglkjsdfçglkjsdfçlgkjsdçgl")
-    print(f"{token=}")
-    print(f"{access_token=}")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username = payload.get("sub")
