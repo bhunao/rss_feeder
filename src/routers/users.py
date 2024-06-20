@@ -1,15 +1,14 @@
 from datetime import timezone, datetime, timedelta
-from typing import Annotated, Optional
+from typing import Annotated
 
 from fastapi import (
-    Depends,
     APIRouter,
-    Request,
+    Depends,
     Form,
-    Response,
     HTTPException,
+    Request,
+    Response,
     status,
-    Cookie,
 )
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.responses import RedirectResponse
