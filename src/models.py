@@ -5,17 +5,17 @@ from typing import Optional
 from sqlalchemy import Column, String
 from sqlmodel import Field, Relationship
 
-from src.core.database import SQLModel
+from src.core.database import MODEL
 
 
-class SourceSchema(SQLModel):
+class SourceSchema(MODEL):
     title: str
     subtitle: str
     url: str
     language: str
 
 
-class Source(SQLModel, table=True):
+class Source(MODEL, table=True):
     __tablename__ = "sources"
 
     id: int = Field(default=None, primary_key=True)
@@ -27,13 +27,13 @@ class Source(SQLModel, table=True):
     articles: list["Article"] = Relationship(back_populates="source")
 
 
-class ExampleModelSchema(SQLModel):
+class ExampleModelSchema(MODEL):
     name: str
     favorite_number: int
     date: date
 
 
-class ExampleModel(SQLModel, table=True):
+class ExampleModel(MODEL, table=True):
     __tablename__ = "example_model"
 
     id: Optional[int] = Field(nullable=False, primary_key=True)
@@ -42,7 +42,7 @@ class ExampleModel(SQLModel, table=True):
     date: date
 
 
-class ArticleSchema(SQLModel):
+class ArticleSchema(MODEL):
     source_id: int | None = Field(default=None, foreign_key="sources.id")
     title: str
     date_published: datetime
@@ -50,7 +50,7 @@ class ArticleSchema(SQLModel):
     image_url: str
 
 
-class Article(SQLModel, table=True):
+class Article(MODEL, table=True):
     __tablename__ = "articles"
 
     id: int = Field(default=None, primary_key=True)
@@ -63,12 +63,12 @@ class Article(SQLModel, table=True):
     source: Source | None = Relationship(back_populates="articles")
 
 
-class SubscriptionSchema(SQLModel):
+class SubscriptionSchema(MODEL):
     user_id: int
     source_id: int
 
 
-class Subscription(SQLModel, table=True):
+class Subscription(MODEL, table=True):
     __tablename__ = "subscriptions"
 
     id: Optional[int] = Field(nullable=False, primary_key=True)
@@ -76,7 +76,7 @@ class Subscription(SQLModel, table=True):
     source_id: int
 
 
-class User(SQLModel, table=True):
+class User(MODEL, table=True):
     id: int = Field(default=None, primary_key=True)
     username: str = Field(unique=True)
     password: str
@@ -85,10 +85,10 @@ class User(SQLModel, table=True):
     disabled: bool = False
 
 
-class Token(SQLModel):
+class Token(MODEL):
     access_token: str
     token_type: str
 
 
-class TokenData(SQLModel):
+class TokenData(MODEL):
     username: Optional[str] = None

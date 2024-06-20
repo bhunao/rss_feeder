@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, create_engine
 
 from src.main import app
-from src.core.database import get_session, SQLModel
+from src.core.database import get_session, MODEL
 from src.routers.database_test import router as database_test_router
 
 BASE_URL = "/example_model"
@@ -30,9 +30,9 @@ client = TestClient(app)
 
 @pytest.fixture
 def setup_db():
-    SQLModel.metadata.create_all(engine)
+    MODEL.metadata.create_all(engine)
     yield
-    SQLModel.metadata.drop_all(engine)
+    MODEL.metadata.drop_all(engine)
 
 
 def test_connection(setup_db):

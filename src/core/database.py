@@ -1,8 +1,9 @@
 import logging
 
-from typing import Generator, List
+from typing import Generator
 
-from sqlmodel import SQLModel, select
+from sqlmodel import SQLModel as MODEL
+from sqlmodel import select
 from databases import DatabaseURL
 from starlette.datastructures import Secret
 
@@ -34,7 +35,7 @@ engine = create_engine(postgre_url, echo=False)
 
 
 def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+    MODEL.metadata.create_all(engine)
 
 
 def get_session() -> Generator[Session, None, None]:
@@ -46,7 +47,7 @@ class BaseDatabase:
     def __init__(self, session: Session):
         self.session: Session = session
 
-    def create(self, record: SQLModel, table: SQLModel = None) -> SQLModel:
+    def create(self, record: MODEL, table: MODEL = None) -> MODEL:
         table = table if table else record.__class__
 
         new_record = table.model_validate(record, from_attributes=True)
@@ -55,16 +56,21 @@ class BaseDatabase:
         self.session.refresh(new_record)
         return new_record
 
-    def read(self, table: SQLModel, id: int) -> SQLModel | None:
+    def read(self, table: MODEL, id: int) -> MODEL | None:
         db_record = self.session.get(table, id)
         return db_record
 
-    def read_all(self, table: SQLModel = None, skip: int = 0, limit: int = 100) -> List[SQLModel]:
+    def read_all(
+            self,
+            table: MODEL = None,
+            skip: int = 0,
+            limit: int = 100
+    ) -> list[MODEL]:
         query = select(table).offset(skip).limit(limit)
         result = self.session.exec(query).all()
         return result
 
-    def update(self, record: SQLModel, table: SQLModel = None) -> SQLModel | None:
+    def update(self, record: MODEL, table: MODEL = None) -> MODEL | None:
         table = table if table else record.__class__
         db_record = self.session.get(table, record.id)
         if db_record is None:
@@ -75,7 +81,7 @@ class BaseDatabase:
         self.session.refresh(db_record)
         return db_record
 
-    def delete(self, table: SQLModel, id: int) -> SQLModel | None:
+    def delete(self, table: MODEL, id: int) -> MODEL | None:
         db_record = self.session.get(table, id)
         if db_record is None:
             return None
