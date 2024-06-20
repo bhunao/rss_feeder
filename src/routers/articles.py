@@ -9,7 +9,7 @@ from sqlmodel import Session
 from src.core.config import templates
 from src.core.database import get_session
 from src.models import Article, Source
-from src.database import ServiceDatabase
+from src.database import Database
 
 
 NAME = "articles"
@@ -24,12 +24,12 @@ logger = logging.getLogger(__name__)
 async def home(
     request: Request, bg_tasks: BackgroundTasks, session: Session = Depends(get_session)
 ) -> str:
-    db = ServiceDatabase(session)
+    db = Database(session)
     for s in db.read_all_sources():
         logger.info(f"created background task: REFRESH_SOURCE: '{s.title}'")
         bg_tasks.add_task(db.refresh_articles, s.id)
 
-    result = ServiceDatabase(session).get_lasts()
+    result = Database(session).get_lasts()
     return templates.TemplateResponse(
         "pages/articles_by_date.html",
         {"request": request, "items": result},
@@ -41,7 +41,7 @@ async def home(
 async def articles_by_source(
     request: Request, bg_tasks: BackgroundTasks, session: Session = Depends(get_session)
 ) -> str:
-    db = ServiceDatabase(session)
+    db = Database(session)
     for s in db.read_all_sources():
         logger.info(f"created background task: REFRESH_SOURCE: '{s.title}'")
         bg_tasks.add_task(db.refresh_articles, s.id)

@@ -5,7 +5,8 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
-from src.core.database import get_session, Database
+from src.core.database import get_session
+from src.core.database import BaseDatabase as Database
 from src.models import ExampleModel, ExampleModelSchema
 
 

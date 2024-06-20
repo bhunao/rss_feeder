@@ -17,7 +17,7 @@ from sqlmodel import Session
 
 from src.core.config import templates, config
 from src.core.database import get_session
-from src.database import ServiceDatabase as Database
+from src.database import Database
 from src.database import get_current_user
 from src.models import User
 
@@ -117,7 +117,7 @@ async def logout(
     current_user: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    headers = {"HX-Redirect": "/"} if current_user else None
+    headers = {"HX-Redirect": "/user/login"} if current_user else None
     template = templates.TemplateResponse(
         "pages/me.html",
         {"request": request, "user": current_user},

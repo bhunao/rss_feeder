@@ -42,7 +42,7 @@ def get_session() -> Generator[Session, None, None]:
         yield session
 
 
-class Database:
+class BaseDatabase:
     def __init__(self, session: Session):
         self.session: Session = session
 

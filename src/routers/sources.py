@@ -12,7 +12,7 @@ from src.core.database import get_session
 from src.core.config import templates
 from src.models import Source
 from src.core.errors import HTTP400_ALREADY_EXISTS
-from src.database import ServiceDatabase, get_rss
+from src.database import Database, get_rss
 
 
 NAME = "sources"
@@ -36,7 +36,7 @@ async def home(
         order_by = "date_created"
     order_by = getattr(Source, order_by)
 
-    items = ServiceDatabase(session).read_all_sources(order_by)
+    items = Database(session).read_all_sources(order_by)
     return templates.TemplateResponse(
         "pages/sources.html",
         {"request": request, "items": items},
@@ -60,7 +60,7 @@ async def create(
         url = "http://" + url
 
     is_url_valid = validators.url(url)
-    database = ServiceDatabase(session)
+    database = Database(session)
     if not is_url_valid:
         items = database.read_all_sources(order_by)
         msg = f"Invalid URL: '{is_url_valid.args[1]['value']}'"
@@ -108,11 +108,11 @@ async def create(
 
 @router.get("/refresh")
 async def refresh_source(id: int, session: Session = Depends(get_session)):
-    ServiceDatabase(session).refresh_articles(source_id=id)
+    Database(session).refresh_articles(source_id=id)
     return "true"
 
 
 @router.delete("/")
 async def delete(id: int, session: Session = Depends(get_session)):
-    ServiceDatabase(session).delete(Source, id)
+    Database(session).delete(Source, id)
     return Response()

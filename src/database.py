@@ -12,7 +12,7 @@ from passlib.context import CryptContext
 from fastapi import Depends, Cookie
 from fastapi.security import OAuth2PasswordBearer
 
-from src.core.database import Database, get_session
+from src.core.database import BaseDatabase, get_session
 from src.core.errors import HTTP401_INVALID_CREDENTIALS
 from src.models import Source, Article, User, TokenData
 from src.core.config import SECRET_KEY, ALGORITHM
@@ -29,7 +29,7 @@ def get_rss(url: str) -> dict:
     return parsed
 
 
-class ServiceDatabase(Database):
+class Database(BaseDatabase):
     def create_source(self, rec: SQLModel) -> Source | None:
         session = self.session
 
@@ -185,6 +185,6 @@ def get_current_user(
     access_token: str = Cookie(None),
     session: Session = Depends(get_session),
 ):
-    db = ServiceDatabase(session)
+    db = Database(session)
     user = db.get_current_user_from_cookie(access_token)
     return user
