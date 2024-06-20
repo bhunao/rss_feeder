@@ -18,6 +18,7 @@ from sqlmodel import Session
 from src.core.config import templates, config
 from src.core.database import get_session
 from src.database import ServiceDatabase as Database
+from src.database import get_current_user
 from src.models import User
 
 
@@ -33,13 +34,15 @@ router = APIRouter(prefix=PREFIX, tags=TAGS)
 @router.get("/signup", response_model=User)
 async def signup(
     request: Request,
-    session: Session = Depends(get_session),
+    current_user: str = Depends(get_current_user),
 ):
-    return templates.TemplateResponse(
-        "pages/signup.html",
-        {"request": request},
+    html_page = "pages/me.html" if current_user else "pages/signup.html"
+    template = templates.TemplateResponse(
+        html_page,
+        {"request": request, "user": current_user},
         block_name=None,
     )
+    return template
 
 
 @router.post("/signup")
@@ -63,13 +66,15 @@ async def signup_form(
 @router.get("/login", response_model=User)
 async def login(
     request: Request,
-    session: Session = Depends(get_session),
+    current_user: str = Depends(get_current_user),
 ):
-    return templates.TemplateResponse(
-        "pages/login.html",
-        {"request": request},
+    html_page = "pages/me.html" if current_user else "pages/login.html"
+    template = templates.TemplateResponse(
+        html_page,
+        {"request": request, "user": current_user},
         block_name=None,
     )
+    return template
 
 
 @router.post("/login")
@@ -92,61 +97,48 @@ async def login_form(
     access_token = Database.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
-    response.set_cookie(
+    template = templates.TemplateResponse(
+        "pages/me.html",
+        {"request": request, "user": user, "response": response},
+        block_name="content",
+    )
+    template.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,
         expires=datetime.now(timezone.utc) + access_token_expires,
     )
-    return templates.TemplateResponse(
-        "pages/me.html",
-        {"request": request, "user": user},
-        block_name="content",
-    )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return template
 
 
 @router.post("/logout")
 async def logout(
-    response: Response,
-    access_token: Optional[str] = Cookie(None),
+    request: Request,
+    current_user: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    if access_token is None:
-        return {"msg": "you're not logged in."}
+    headers = {"HX-Redirect": "/"} if current_user else None
+    template = templates.TemplateResponse(
+        "pages/me.html",
+        {"request": request, "user": current_user},
+        headers=headers,
+        block_name="content",
+    )
+    template.delete_cookie(key="access_token")
+    return template
 
-    db = Database(session)
-    user = db.get_current_user_from_cookie(access_token)
-    if not user:
-        return {"msg": "you're not logged in."}
 
-    response.delete_cookie(key="access_token")
-    return {"msg": f"logged out as {user.username}"}
-
-
-@router.get("/me/")
+@ router.get("/me/")
 async def read_users_me(
     request: Request,
-    access_token: str = Cookie(None),
+    current_user: str = Depends(get_current_user),
     session: Session = Depends(get_session),
 ):
-    db = Database(session)
-    if not access_token:
+    if not current_user:
         return RedirectResponse("/user/login")
 
-    current_user = db.get_current_user_from_cookie(access_token)
     return templates.TemplateResponse(
         "pages/me.html",
         {"request": request, "user": current_user},
         block_name=None,
     )
-
-
-# @router.get("/cookie/")
-# async def get_cookie(
-# access_token: Optional[str] = Cookie(None), session: Session = Depends(get_session)
-# ):
-# assert access_token is not None
-# user = UserService.get_current_user_from_cookie(access_token, session)
-# return {"user": user.username}
-# return

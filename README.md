@@ -2,9 +2,11 @@
 
 
 ## TODO
-- front-end
-- fix some news not comming with **parsed_data**
-- fix source icon buttons become "blue" after clicked
+- add return types to Database class methods
+  - add mypy
+- see how to do template blocks to not repeat html code
+- fix some dates that are coming empty and code is set to datetime.now()
+- add content to page after signup
 
 ## run docker
 `docker compose build`
