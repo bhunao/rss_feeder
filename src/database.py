@@ -7,12 +7,12 @@ from time import mktime
 from typing import Optional
 
 from jose import JWTError, jwt
-from sqlmodel import SQLModel, select, or_, and_, Session
+from sqlmodel import select, or_, and_, Session
 from passlib.context import CryptContext
 from fastapi import Depends, Cookie
 from fastapi.security import OAuth2PasswordBearer
 
-from src.core.database import BaseDatabase, get_session
+from src.core.database import BaseDatabase, get_session, MODEL
 from src.core.errors import HTTP401_INVALID_CREDENTIALS
 from src.models import Source, Article, User, TokenData
 from src.core.config import SECRET_KEY, ALGORITHM
@@ -30,7 +30,7 @@ def get_rss(url: str) -> dict:
 
 
 class Database(BaseDatabase):
-    def create_source(self, rec: SQLModel) -> Source | None:
+    def create_source(self, rec: MODEL) -> Source | None:
         session = self.session
 
         query = select(Source).where(
@@ -61,13 +61,13 @@ class Database(BaseDatabase):
 
     def read_all_sources(
         self, order_by=Source.date_created, skip: int = 0, limit: int = 100
-    ) -> list[SQLModel]:
+    ) -> list[MODEL]:
         query = select(Source).order_by(
             order_by.desc()).offset(skip).limit(limit)
         result = self.session.exec(query).all()
         return result
 
-    def create_article(self, rec: SQLModel) -> Article | None:
+    def create_article(self, rec: MODEL) -> Article | None:
         session = self.session
         query = select(Article).where(
             Article.title == rec.title,
