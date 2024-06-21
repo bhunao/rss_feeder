@@ -1,12 +1,10 @@
 import logging
 
-from typing import List
-
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
 
-from src.core.database import get_session
 from src.core.database import BaseDatabase as Database
+from src.core.database import get_session
 from src.models import ExampleModel, ExampleModelSchema
 
 
@@ -47,7 +45,7 @@ async def delete(id: int, session: Session = Depends(get_session)):
     return result
 
 
-@router.get("/all", response_model=List[ExampleModel])
+@router.get("/all", response_model=list[ExampleModel])
 async def read_all(
         session: Session = Depends(get_session),
         skip: int = 0,

@@ -4,7 +4,7 @@ import requests
 
 from datetime import datetime, timezone, timedelta
 from time import mktime
-from typing import List, Optional
+from typing import Optional
 
 from jose import JWTError, jwt
 from sqlmodel import SQLModel, select, or_, and_, Session
@@ -61,7 +61,7 @@ class Database(BaseDatabase):
 
     def read_all_sources(
         self, order_by=Source.date_created, skip: int = 0, limit: int = 100
-    ) -> List[SQLModel]:
+    ) -> list[SQLModel]:
         query = select(Source).order_by(
             order_by.desc()).offset(skip).limit(limit)
         result = self.session.exec(query).all()
@@ -78,13 +78,13 @@ class Database(BaseDatabase):
             return None
         return super().create(rec)
 
-    def get_lasts(self, limit=100) -> List[Article]:
+    def get_lasts(self, limit=100) -> list[Article]:
         query = select(Article).order_by(
             Article.date_published.desc()).limit(limit)
         result = self.session.exec(query).all()
         return result
 
-    def get_by_source(self, source: Source, limit=100) -> List[Article]:
+    def get_by_source(self, source: Source, limit=100) -> list[Article]:
         query = (
             select(Article)
             .where(Article.source_id == source.id)
