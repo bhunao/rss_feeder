@@ -11,6 +11,8 @@ The Articles Feed allows you to read articles sourced from [RSS](https://www.rss
 - add return types to Database class methods
   - add mypy
 - see how to do template blocks to not repeat html code
+- make templates only return code block when request has `HX-Request == true`
+- add cooldown to refresh source
 - fix some dates that are coming empty and code is set to datetime.now()
 - add content to page after signup
 - pages
