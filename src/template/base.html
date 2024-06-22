@@ -74,37 +74,39 @@
                         </div>
                     </div>
                 </div>
-                <div class="col py-3">
+                <div class="col p-0 py-5">
                     <!-- Main Content -->
-                    <div id="page" class="container">
+                    <div id="page" class="">
 
                         {% block content %}
 
+                        <div class="container">
 
-                        <div class="alert alert-primary rounded-0" role="alert">
-                            TODO: change this text
+                            <div class="alert alert-primary rounded-0" role="alert">
+                                TODO: change this text
+                            </div>
+
+                            <h1 class="pb-3">News Aggregator</h1>
+                            <h2 class="pb-3">Project Overview:</h2>
+                            <p>Welcome to the News Aggregator, your ultimate solution for staying informed with the latest news from a wide array of sources. Our platform consolidates articles from numerous publishers, providing you with a comprehensive and personalized news experience.</p>
+
+                            <h2 class="pb-3">Key Features:</h2>
+
+                            <h3 class="pb-3">Personalized News Feed</h3>
+                            <ul>
+                                <li><strong>Up-to-Date Articles:</strong> Our news feed brings you the latest articles from all the sources we cover, ensuring you never miss out on current events.</li>
+                                <li><strong>Customized Subscriptions:</strong> Tailor your news experience by subscribing to your favorite sources and categories. You'll have a dedicated page that displays articles specifically from your chosen subscriptions, giving you quick access to the news that matters most to you.</li>
+                            </ul>
+
+                            <h3 class="pb-3">Intelligent News Crawler</h3>
+                            <ul>
+                                <li><strong>Efficient Parsing:</strong> Our advanced news crawler extracts the key details from each article, including the title, subtitle, and summary. This means you get a concise overview of each story, making it easy to decide what you want to read in full.</li>
+                                <li><strong>No Duplicate Content:</strong> We understand the importance of a clean and organized news feed. Our system checks for duplicate articles before adding them to our database, ensuring that you won't see the same article multiple times from the same source.</li>
+                            </ul>
+
+                            <p>By choosing our News Aggregator, you gain access to a streamlined and personalized news service that keeps you informed and up-to-date with the latest headlines from your favorite sources. Stay ahead of the news curve with ease and efficiency.</p>
+
                         </div>
-
-                        <h1 class="pb-3">News Aggregator</h1>
-                        <h2 class="pb-3">Project Overview:</h2>
-                        <p>Welcome to the News Aggregator, your ultimate solution for staying informed with the latest news from a wide array of sources. Our platform consolidates articles from numerous publishers, providing you with a comprehensive and personalized news experience.</p>
-
-                        <h2 class="pb-3">Key Features:</h2>
-
-                        <h3 class="pb-3">Personalized News Feed</h3>
-                        <ul>
-                            <li><strong>Up-to-Date Articles:</strong> Our news feed brings you the latest articles from all the sources we cover, ensuring you never miss out on current events.</li>
-                            <li><strong>Customized Subscriptions:</strong> Tailor your news experience by subscribing to your favorite sources and categories. You'll have a dedicated page that displays articles specifically from your chosen subscriptions, giving you quick access to the news that matters most to you.</li>
-                        </ul>
-
-                        <h3 class="pb-3">Intelligent News Crawler</h3>
-                        <ul>
-                            <li><strong>Efficient Parsing:</strong> Our advanced news crawler extracts the key details from each article, including the title, subtitle, and summary. This means you get a concise overview of each story, making it easy to decide what you want to read in full.</li>
-                            <li><strong>No Duplicate Content:</strong> We understand the importance of a clean and organized news feed. Our system checks for duplicate articles before adding them to our database, ensuring that you won't see the same article multiple times from the same source.</li>
-                        </ul>
-
-                        <p>By choosing our News Aggregator, you gain access to a streamlined and personalized news service that keeps you informed and up-to-date with the latest headlines from your favorite sources. Stay ahead of the news curve with ease and efficiency.</p>
-
 
                         {% endblock %}
 
@@ -118,5 +120,5 @@
 
 
         <script src="/static/bootstrap.bundle.js"></script>
-    </body>
+        </body>
 </html>

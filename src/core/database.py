@@ -1,3 +1,4 @@
+from typing import TypeVar
 import logging
 
 from typing import Generator
@@ -43,6 +44,9 @@ def get_session() -> Generator[Session, None, None]:
         yield session
 
 
+MODEL_T = TypeVar("MODEL_T", bound=MODEL)
+
+
 class BaseDatabase:
     def __init__(self, session: Session):
         self.session: Session = session
@@ -56,7 +60,7 @@ class BaseDatabase:
         self.session.refresh(new_record)
         return new_record
 
-    def read(self, table: MODEL, id: int) -> MODEL | None:
+    def read(self, table: MODEL_T, id: int) -> MODEL_T | None:
         db_record = self.session.get(table, id)
         return db_record
 
