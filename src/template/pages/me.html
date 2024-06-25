@@ -1,22 +1,81 @@
 {% extends "base.html" %}
-{% block content %}
+    {% block content %}
 
-<h2>User: {{ user.username }}</h1>
+    <div class="container px-5">
+        <h2>User: {{ user.username }}</h1>
 
-<hr>
+    </div>
+    <hr>
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="container mt-4">
+        <div class="row justify-content-center px-5">
             <div class="card rounded-0">
                 <div class="card-body">
-                    <h6 class="card-title text-center">ME</h5>
-                    {{ user.email }}
-                    <button hx-post="/user/logout" type="submit" class="btn btn-secondary m-2">Logout</button>
+                    <h5 class="card-title text-center">My user info</h5>
+
+                    <table class="table">
+                        <tbody class="">
+                            <tr class="">
+                                <td>
+                                    <label for="input_username" class="col-form-label">Username</label>
+                                </td>
+                                <td>
+                                    <input disabled type="text" id="input_username" class="form-control" value="{{ user.username }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="input_email" class="col-form-label">email</label>
+                                </td>
+                                <td>
+                                    <input disabled type="text" id="input_email" class="form-control" value="{{ user.email }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="input_password" class="col-form-label">password</label>
+                                </td>
+                                <td>
+                                    <input disabled type="text" id="input_password" class="form-control" value="{{ user.password }}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="input_disabled" class="col-form-label">disabled</label>
+                                </td>
+                                <td>
+                                    <input disabled {% if user.disabled %} checked {% endif %} type="checkbox" id="input_disabled" class="form-check-input" value="{{ user.disabled }}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-{% endblock %}
+    <div class="container mt-3">
+        <div class="row justify-content-center px-5">
+            <div class="card rounded-0">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Subscriptions</h5>
+                    <div class="alert alert-primary rounded-0">
+                        <strong>
+                            #TODO: create subscriptions
+                        </strong>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item">An item</li>
+                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">A third item</li>
+                        <li class="list-group-item">A fourth item</li>
+                        <li class="list-group-item">And a fifth one</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}

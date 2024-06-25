@@ -1,12 +1,13 @@
 import logging
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 from src import routers
 from src.core.config import templates
 from src.core.dependencies import lifespan
+from src.database import get_current_user
 
 
 app = FastAPI(lifespan=lifespan)
@@ -22,7 +23,8 @@ for name in dir(routers):
 
 
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request) -> str:
+async def home(request: Request, current_user: str = Depends(get_current_user)) -> str:
     return templates.TemplateResponse(
-        "base.html", {"request": request}, block_name=None,
+        "base.html", {"request": request, "user": current_user},
+        block_name=None,
     )

@@ -57,21 +57,28 @@
                             </li>
                         </ul>
                         <hr>
+                        {% if user %}
                         <div class="dropdown pb-4">
                             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="https://avatars.githubusercontent.com/u/49922137?v=4" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                                <span class="d-none d-sm-inline mx-1">User</span>
+                                <span class="d-none d-sm-inline mx-1">{{ user.username }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                <li><a class="dropdown-item" href="#">New project...</a></li>
-                                <li><a class="dropdown-item" href="#">Settings</a></li>
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('login')}}">Profile</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                                <li><a hx-post="/user/logout" class="dropdown-item" href="#">Sign out</a></li>
                             </ul>
                         </div>
+                        {% else %}
+                        <div class="dropdown pb-4">
+                            <a href="{{ url_for('login') }}" class="d-flex align-items-center text-decoration-none">
+                                <img src="https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                                <span class="d-none d-sm-inline mx-1">LogIn</span>
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="col p-0 py-5">

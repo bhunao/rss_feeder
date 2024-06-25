@@ -13,6 +13,7 @@ from src.core.config import templates
 from src.models import Source
 from src.core.errors import HTTP400_ALREADY_EXISTS
 from src.database import Database, get_rss
+from src.database import get_current_user
 
 
 NAME = "sources"
@@ -28,6 +29,7 @@ logger = logging.getLogger(__name__)
 async def home(
         request: Request,
         session: Session = Depends(get_session),
+        current_user: str = Depends(get_current_user),
         order_by: Optional[str] = "date_created",
 ) -> str:
 
@@ -39,7 +41,11 @@ async def home(
     items = Database(session).read_all_sources(order_by)
     return templates.TemplateResponse(
         "pages/sources.html",
-        {"request": request, "items": items},
+        {
+            "request": request,
+            "items": items,
+            "user": current_user
+        },
         block_name=None
     )
 
@@ -49,6 +55,7 @@ async def create(
         request: Request,
         url: str = Form(...),
         session: Session = Depends(get_session),
+        current_user: str = Depends(get_current_user),
         order_by: Optional[str] = "date_created"
 ):
     valid_cols = Source.schema()['properties'].keys()
@@ -68,7 +75,8 @@ async def create(
             "request": request,
             "items": items,
             "alert_type": "danger",
-            "msg": msg
+            "msg": msg,
+            "user": current_user
         }
         return templates.TemplateResponse(
             "tables/sources.html",
