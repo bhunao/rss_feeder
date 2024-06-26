@@ -5,30 +5,22 @@ from typing import Generator
 
 from sqlmodel import SQLModel as MODEL
 from sqlmodel import select
-from databases import DatabaseURL
-from starlette.datastructures import Secret
 
 from sqlmodel import create_engine
 from sqlmodel import Session
 
-from src.core.config import config
+from src.core.config import (
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_SERVER,
+    POSTGRES_DB,
+    POSTGRES_PORT,
+)
 
 
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s | %(levelname)s | %(name)s.%(funcName)s]: %(message)s"
-)
-
-POSTGRES_USER = config("POSTGRES_USER", default="USER", cast=str)
-POSTGRES_PASSWORD = config(
-    "POSTGRES_PASSWORD", default="PASSWORD", cast=Secret)
-POSTGRES_SERVER = config("POSTGRES_SERVER", cast=str, default="db")
-POSTGRES_PORT = config("POSTGRES_PORT", cast=str, default="5432")
-POSTGRES_DB = config("POSTGRES_DB", cast=str, default="default_db")
-DATABASE_URL = config(
-    "DATABASE_URL",
-    cast=DatabaseURL,
-    default=f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}",
 )
 
 postgre_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
