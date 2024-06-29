@@ -20,7 +20,7 @@
             <p>Once added, articles from the new source will appear in your news feed.</p>
         </div>
         <div class="col">
-            <form class="mb-3 p-3 border" id="source-form" hx-post="/sources/new" hx-trigger="submit" hx-swap="innerHTML" hx-target="#sources_table">
+            <form class="mb-3 p-3 border" id="source-form" hx-post="{{ url_for('sources_create') }}" hx-trigger="submit" hx-swap="innerHTML" hx-target="#sources_table">
                 <div class="mb-3">
                     <label for="urlInput" class="form-label">Add Source</label>
                     <input type="text" name="url" class="form-control" id="urlInput" aria-describedby="urlHelp">
@@ -72,13 +72,13 @@
                     <td>{{ item.language }}</td>
                     <td>{{ item.date_created }}</td>
                     <td>
-                        <button class="btn btn-light rounded-0" hx-get="/sources/refresh?id={{ item.id }}">
+                        <button class="btn btn-light rounded-0" hx-get="{{ url_for('sources_refresh').include_query_params(id=item.id) }}">
                             <span><i class="bi bi-arrow-clockwise"></i></span>
                             <p id="refresh_{{ item.id }}"></p>
                         </button>
                     </td>
                     <td hx-confirm="Are you sure?">
-                        <button class="btn btn-light rounded-0" hx-delete="/sources/?id={{ item.id }}">
+                        <button class="btn btn-light rounded-0" hx-delete="{{ url_for('sources_delete').include_query_params(id=item.id) }}">
                             <span><i class="bi bi-x-circle-fill"></i></span>
                         </button>
                     </td>

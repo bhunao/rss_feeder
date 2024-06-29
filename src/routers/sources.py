@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("/", response_class=HTMLResponse)
-async def home(
+async def sources_home(
         request: Request,
         session: Session = Depends(get_session),
         current_user: str = Depends(get_current_user),
@@ -51,7 +51,7 @@ async def home(
 
 
 @router.post("/new", response_model=str)
-async def create(
+async def sources_create(
         request: Request,
         url: str = Form(...),
         session: Session = Depends(get_session),
@@ -115,12 +115,12 @@ async def create(
 
 
 @router.get("/refresh")
-async def refresh_source(id: int, session: Session = Depends(get_session)):
+async def sources_refresh(id: int, session: Session = Depends(get_session)):
     Database(session).refresh_articles(source_id=id)
     return "true"
 
 
 @router.delete("/")
-async def delete(id: int, session: Session = Depends(get_session)):
+async def sources_delete(id: int, session: Session = Depends(get_session)):
     Database(session).delete(Source, id)
     return Response()

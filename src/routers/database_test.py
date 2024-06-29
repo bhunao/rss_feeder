@@ -17,36 +17,36 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("/health_check")
-async def home():
+async def db_test_home():
     return True
 
 
 @router.post("/", response_model=ExampleModel)
-async def create(record: ExampleModelSchema, session: Session = Depends(get_session)):
+async def db_test_create(record: ExampleModelSchema, session: Session = Depends(get_session)):
     result = Database(session).create(record, table=ExampleModel)
     return result
 
 
 @router.get("/", response_model=ExampleModel)
-async def read(id: int, session: Session = Depends(get_session)):
+async def db_test_read(id: int, session: Session = Depends(get_session)):
     result = Database(session).read(ExampleModel, id)
     return result
 
 
 @router.post("/update", response_model=ExampleModel)
-async def update(record: ExampleModel, session: Session = Depends(get_session)):
+async def db_test_update(record: ExampleModel, session: Session = Depends(get_session)):
     result = Database(session).update(record)
     return result
 
 
 @router.delete("/", response_model=ExampleModel)
-async def delete(id: int, session: Session = Depends(get_session)):
+async def db_test_delete(id: int, session: Session = Depends(get_session)):
     result = Database(session).delete(ExampleModel, id)
     return result
 
 
 @router.get("/all", response_model=list[ExampleModel])
-async def read_all(
+async def db_test_read_all(
         session: Session = Depends(get_session),
         skip: int = 0,
         limit: int = 100
@@ -56,6 +56,6 @@ async def read_all(
 
 
 @router.post("/ioio", response_model=ExampleModel)
-async def ioio(record: ExampleModelSchema, session: Session = Depends(get_session)):
+async def db_test_ioio(record: ExampleModelSchema, session: Session = Depends(get_session)):
     result = Database(session).create(record, table=ExampleModel)
     return result

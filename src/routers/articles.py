@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("/", response_class=HTMLResponse)
-async def home(
+async def articles_by_date(
     request: Request,
     bg_tasks: BackgroundTasks,
     session: Session = Depends(get_session),
@@ -67,7 +67,7 @@ async def articles_by_source(
 
 
 @router.get("/{id}")
-async def source_articles(
+async def articles_from_source(
     id: int,
     request: Request,
     bg_tasks: BackgroundTasks,

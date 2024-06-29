@@ -10,8 +10,8 @@
         <div class="col-md-8">
             <div class="card rounded-0">
                 <div class="card-body">
-                    <h6 class="card-title text-center">Sign Up</h5>
-                    <form hx-post="/user/login" hx-target="#page">
+                    <h6 class="card-title text-center">Sign Up</form>
+                    <form hx-post="{{ url_for('users_login') }}" hx-target="#page">
                         <div class="form-group mb-2">
                             <label for="username">Username</label>
                             <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" >

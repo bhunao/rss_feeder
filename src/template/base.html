@@ -64,16 +64,16 @@
                                 <span class="d-none d-sm-inline mx-1">{{ user.username }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                                <li><a class="dropdown-item" href="{{ url_for('login')}}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('users_login')}}">Profile</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li><a hx-post="/user/logout" class="dropdown-item" href="#">Sign out</a></li>
+                                <li><a hx-post="{{ url_for('users_logout') }}" class="dropdown-item" href="#">Sign out</a></li>
                             </ul>
                         </div>
                         {% else %}
                         <div class="dropdown pb-4">
-                            <a href="{{ url_for('login') }}" class="d-flex align-items-center text-decoration-none">
+                            <a href="{{ url_for('users_login') }}" class="d-flex align-items-center text-decoration-none">
                                 <img src="https://static.vecteezy.com/system/resources/previews/008/442/086/non_2x/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector.jpg" alt="hugenerd" width="30" height="30" class="rounded-circle">
                                 <span class="d-none d-sm-inline mx-1">LogIn</span>
                             </a>

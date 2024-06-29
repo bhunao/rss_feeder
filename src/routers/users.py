@@ -31,7 +31,7 @@ router = APIRouter(prefix=PREFIX, tags=TAGS)
 
 
 @router.get("/signup", response_model=User)
-async def signup(
+async def users_signup(
     request: Request,
     current_user: str = Depends(get_current_user),
 ):
@@ -45,7 +45,7 @@ async def signup(
 
 
 @router.post("/signup")
-async def signup_form(
+async def users_signup_form(
     request: Request,
     username: str = Form(...),
     email: str = Form(...),
@@ -63,7 +63,7 @@ async def signup_form(
 
 
 @router.get("/login", response_model=User)
-async def login(
+async def users_login(
     request: Request,
     current_user: str = Depends(get_current_user),
 ):
@@ -77,7 +77,7 @@ async def login(
 
 
 @router.post("/login")
-async def login_form(
+async def users_login_form(
     request: Request,
     response: Response,
     form: Annotated[OAuth2PasswordRequestForm, Depends()],
@@ -111,7 +111,7 @@ async def login_form(
 
 
 @router.post("/logout")
-async def logout(
+async def users_logout(
     request: Request,
     current_user: str = Depends(get_current_user),
     session: Session = Depends(get_session),
@@ -128,7 +128,7 @@ async def logout(
 
 
 @router.get("/me/")
-async def read_users_me(
+async def users_read_users_me(
     request: Request,
     current_user: str = Depends(get_current_user),
     session: Session = Depends(get_session),
