@@ -19,9 +19,10 @@ from src.core.config import (
 
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="[%(asctime)s | %(levelname)s | %(name)s.%(funcName)s]: %(message)s"
 )
+logger = logging.getLogger(__name__)
 
 postgre_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"
 engine = create_engine(postgre_url, echo=False)
@@ -50,6 +51,8 @@ class BaseDatabase:
         self.session.add(new_record)
         self.session.commit()
         self.session.refresh(new_record)
+        logger.debug(
+            f"Record {table.__name__}(id={new_record.id}) created.")
         return new_record
 
     def read(self, table: MODEL_T, id: int) -> MODEL_T | None:
@@ -83,4 +86,6 @@ class BaseDatabase:
             return None
         self.session.delete(db_record)
         self.session.commit()
+        logger.debug(
+            f"Record {table.__name__}(id={db_record.id}) deleted.")
         return db_record

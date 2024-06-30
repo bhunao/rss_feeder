@@ -34,7 +34,7 @@
                     <td>{{ item.language }}</td>
                     <td>{{ item.date_created }}</td>
                     <td>
-                    <button class="btn btn-light rounded-0" hx-get="{{ url_for('sources_refresh', id=item.id) }}">
+                    <button class="btn btn-light rounded-0" hx-get="{{ url_for('sources_refresh').include_query_params(id=item.id) }}">
                         <span><i class="bi bi-arrow-clockwise"></i></span>
                         <p id="refresh_{{ item.id }}"></p>
                     </button>

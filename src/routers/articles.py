@@ -28,7 +28,7 @@ async def articles_by_date(
 ) -> str:
     db = Database(session)
     for s in db.read_all_sources():
-        logger.info(f"created background task: REFRESH_SOURCE: '{s.title}'")
+        logger.debug(f"BackgroundTasks(Database.refresh_articles, {s.id})")
         bg_tasks.add_task(db.refresh_articles, s.id)
 
     result = Database(session).get_lasts()

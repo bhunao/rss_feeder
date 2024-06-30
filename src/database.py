@@ -33,6 +33,9 @@ class Database(BaseDatabase):
     def create_source(self, rec: MODEL) -> Source | None:
         session = self.session
 
+        if rec.language is None:
+            rec.language = ""
+
         query = select(Source).where(
             or_(
                 Source.url == rec.url.strip(),
@@ -95,11 +98,12 @@ class Database(BaseDatabase):
         return result
 
     def refresh_articles(self, source_id: int, entries: dict = None):
+        source = self.read(Source, source_id)
         if not entries:
-            source = self.read(Source, source_id)
             rss = get_rss(source.url)
             entries = rss["entries"]
 
+        created_articles = []
         for entry in entries:
             if entry.get("published_parsed", None) is None:
                 published = datetime.now()
@@ -117,12 +121,11 @@ class Database(BaseDatabase):
             )
             record = self.create_article(new_record)
             if record:
-                logger.info(
-                    f"new article created. id: {record.id}, title: {record.title}, source_id: {source.id}"
-                )
-            else:
-                logger.debug(
-                    f"article not created. title: '{title}', source_id: '{source.id}' ")
+                created_articles.append(record)
+
+        if created_articles:
+            logger.info(
+                f"{len(created_articles)} Articles created from Source(id={source_id})")
 
     # ==================================================
 

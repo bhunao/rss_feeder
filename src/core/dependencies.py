@@ -35,4 +35,4 @@ async def lifespan(app: FastAPI):
 
     assert app is not None
     yield
-    logger.info("closing application lifespan.")
+    logger.info("Closing application lifespan.")
