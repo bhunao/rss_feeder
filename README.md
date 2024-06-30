@@ -1,4 +1,4 @@
-# RSS Feeder
+# RSS Feeder 0.1
 
 ## About the Project
 
