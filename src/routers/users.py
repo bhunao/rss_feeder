@@ -87,11 +87,15 @@ async def users_login_form(
     user = db.authenticate_user(form.username, form.password)
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
+        error_msg = "Incorrect username or password"
+        template = templates.TemplateResponse(
+            "pages/login.html",
+            {"request": request, "error_msg ": error_msg},
+            block_name="content",
+            status_code=status.HTTP_401_UNAUTHORIZED
         )
+        return template
+
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = Database.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
