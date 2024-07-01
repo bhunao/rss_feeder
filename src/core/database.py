@@ -1,5 +1,5 @@
-from typing import TypeVar
 import logging
+from typing import TypeVar
 
 from typing import Generator
 
@@ -18,10 +18,6 @@ from src.core.config import (
 )
 
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="[%(asctime)s | %(levelname)s | %(name)s.%(funcName)s]: %(message)s"
-)
 logger = logging.getLogger(__name__)
 
 postgre_url = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}:{POSTGRES_PORT}/{POSTGRES_DB}"

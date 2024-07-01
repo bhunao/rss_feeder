@@ -1,8 +1,15 @@
+import logging
+
 from databases import DatabaseURL
 from jinja2_fragments.fastapi import Jinja2Blocks
 from starlette.config import Config
 from starlette.datastructures import Secret
 
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s | %(levelname)s | %(name)s.%(funcName)s]: %(message)s"
+)
 config = Config(".env")
 templates = Jinja2Blocks(directory="src/template/")
 
