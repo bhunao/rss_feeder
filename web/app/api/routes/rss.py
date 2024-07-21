@@ -1,5 +1,6 @@
-from sqlmodel import SQLModel
 from fastapi import APIRouter
+
+from app.feed_parser import RSS
 
 
 router = APIRouter(
@@ -7,12 +8,11 @@ router = APIRouter(
     tags=["rss"],
 )
 
-
-class NewRss(SQLModel):
-    name: str = "duckgogo"
-    link: str = "www.duckgogo.com"
+EX_URL = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
 
 
-@router.post("/")
-async def create(record: NewRss) -> NewRss:
-    return record
+@router.post("/parse_xml")
+async def parse_xml(url: str = EX_URL):
+    """Returns a parsed dict(json) from a RSS url."""
+    rss = RSS(url)
+    return rss.rss_dict

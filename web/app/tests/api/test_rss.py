@@ -2,11 +2,10 @@ from fastapi.testclient import TestClient
 
 
 def test_rss_link(client: TestClient) -> None:
-    LINK = "www.duckgogo.com"
-
-    payload = {"name": "duckgogo", "link": LINK}
+    LINK = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
     response = client.post(
-        "/rss",
-        json=payload
+        "/rss/parse_xml",
+        json=LINK
     )
     assert response.status_code == 200
+    assert response.json()

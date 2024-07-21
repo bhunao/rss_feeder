@@ -33,15 +33,18 @@ class RSS:
         return parsed
 
     def parse_source(self, parsed_rss: dict[str, str], url: str) -> SourceSchema:
+        assert parsed_rss.get("feed"), "RSS has no feed key in dict."
+        feed = parsed_rss["feed"]
+        assert isinstance(feed, dict)
         record = SourceSchema(
-            title=parsed_rss.get("title", "NO_TITLE"),
-            subtitle=parsed_rss.get("subtitle", ""),
+            title=feed.get("title", "NO_TITLE"),
+            subtitle=feed.get("subtitle", ""),
             url=url,
-            language=parsed_rss.get("language", ""),
+            language=feed.get("language", ""),
         )
         return record
 
-    @staticmethod
+    @ staticmethod
     def parse_articles(parsed_rss: dict[str, Any], func: Callable | None = None) -> Generator[dict[str, Any], None, None]:
         for entry in parsed_rss["entries"]:
             assert isinstance(entry, dict)
