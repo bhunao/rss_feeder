@@ -10,7 +10,7 @@ LINK = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
 def test_rss_xml(client: TestClient) -> None:
     xml_str = requests.get(LINK).content
     assert xml_str
-    # TODO: TestClient doesn't accept xml only json
+    # TODO: TestClient doesn't accept xml, only json
     # response = client.post(
     #     "/rss/parse_from/xml",
     #     json=""
@@ -27,6 +27,8 @@ def test_rss_link(client: TestClient) -> None:
 
 
 def test_feedparser_params() -> None:
+    """Test to see if the feedparser libary under the function accept
+    diferent parameter types"""
     rss_schema = RssSchema.parse_feed(LINK)
     assert isinstance(rss_schema, RssSchema)
 
