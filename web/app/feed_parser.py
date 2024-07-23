@@ -1,85 +1,75 @@
 # import logging
 import feedparser
-import requests
 
-from dataclasses import dataclass, field
-from collections.abc import Callable, Generator
-from typing import Any
+from collections.abc import Generator
+from sqlmodel import SQLModel
+from typing import Any, BinaryIO  # pyright: ignore[reportAny]
 
 from app.models import SourceSchema, ArticleSchema
 
 
-DICT_STR_ANY = Generator[dict[str, Any], None, None]
+GEN_DICT = Generator[dict[str, Any], None, None]
+DICT = dict[str, Any]
+
+URL_XML_FILE = str | bytes | BinaryIO
 
 
-@dataclass
-class RSS:
-    url: str
-    rss_dict: dict[str, Any] = field(init=False)
-    source: SourceSchema = field(init=False)
-    articles: DICT_STR_ANY = field(init=False)
+class RssSchema(SQLModel):
+    source: SourceSchema
+    articles: list[ArticleSchema]
 
-    def __post_init__(self):
-        self.rss_dict = self.get_rss(self.url)
-        self.source = self.parse_source(self.rss_dict, self.url)
-        self.articles = self.parse_articles(self.rss_dict)
-
-    def get_rss(self, url: str) -> dict[str, Any]:
-        response = requests.get(url)
-        parsed: dict[str, str] = feedparser.parse(response.content)
-        assert isinstance(parsed, dict)
-        entries = parsed['entries']
-        assert entries
-        return parsed
-
-    def parse_source(self, parsed_rss: dict[str, str], url: str) -> SourceSchema:
+    @staticmethod
+    def parse_source(parsed_rss: DICT, url: str | None = None) -> SourceSchema:
         assert parsed_rss.get("feed"), "RSS has no feed key in dict."
-        feed = parsed_rss["feed"]
-        assert isinstance(feed, dict)
+
+        feed: DICT = parsed_rss["feed"]
+        title: str = feed.get("title", "NO_TITLE")
+        subtitle: str = feed.get("subtitle", "")
+        language: str = feed.get("language", "")
+        _url: str = url if url else ""
+
         record = SourceSchema(
-            title=feed.get("title", "NO_TITLE"),
-            subtitle=feed.get("subtitle", ""),
-            url=url,
-            language=feed.get("language", ""),
+            title=title,
+            subtitle=subtitle,
+            language=language,
+            url=_url,
         )
         return record
 
     @ staticmethod
-    def parse_articles(parsed_rss: dict[str, Any], func: Callable | None = None) -> Generator[dict[str, Any], None, None]:
+    def parse_articles(parsed_rss: DICT) -> list[ArticleSchema]:
+        articles: list[ArticleSchema] = []
         for entry in parsed_rss["entries"]:
-            assert isinstance(entry, dict)
             entry: dict[str, Any]
-            data = {
-                "source": entry.get("source", ""),
-                "title": entry.get("title", ""),
-                "summary": entry.get("summary", ""),
-                "date_published": entry.get("date_published", ""),
-                "image_url": entry.get("image_url", ""),
-            }
-            yield data
 
-            if func:
-                func(data)
+            source: str = entry.get("source", "")
+            title: str = entry.get("title", "")
+            summary: str = entry.get("summary", "")
+            date_published: str = entry.get("date_published", "")
+            image_url: str = entry.get("image_url", "")
+
+            _article = ArticleSchema(
+                source=source,
+                title=title,
+                summary=summary,
+                date_published=date_published,
+                image_url=image_url,
+            )
+            articles.append(_article)
+        return articles
+
+    @staticmethod
+    def rss_dict_from(url_or_xml: URL_XML_FILE) -> DICT:
+        parsed: DICT = feedparser.parse(url_or_xml)
+        assert isinstance(parsed, dict)
+        return parsed
 
     @classmethod
-    def generate_rss_and_articles(cls, url: str):
-        rss_dict: dict[str, Any] = cls.get_rss(url)
-        assert isinstance(rss_dict, dict)
-        articles_list: list[ArticleSchema] = []
-
-        article: dict[str, str]
-        parsed_arts = cls.parse_articles(
-            rss_dict,
-            # func=print
+    def parse_feed(cls, url_or_xml: URL_XML_FILE):
+        rss_dict = cls.rss_dict_from(url_or_xml)
+        source = cls.parse_source(rss_dict)
+        articles = cls.parse_articles(rss_dict)
+        return cls(
+            source=source,
+            articles=articles
         )
-        for article in parsed_arts:
-            new_article = ArticleSchema(**article)
-            articles_list.append(new_article)
-
-
-if __name__ == "__main__":
-    URL = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
-
-    rss = RSS(URL)
-    print(rss.url)
-    print(rss.source)
