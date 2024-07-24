@@ -1,3 +1,4 @@
+from io import StringIO
 import requests
 
 from fastapi.testclient import TestClient
@@ -35,3 +36,13 @@ def test_feedparser_params() -> None:
     xml = requests.get(LINK).content
     rss_schema = RssSchema.parse_feed(xml)
     assert isinstance(rss_schema, RssSchema)
+
+
+# TODO: is worth it having this endpoing?
+# def test_rss_file(client: TestClient) -> None:
+#     file = {"salve": "oi"}
+#     response = client.post(
+#         "/rss/parse_from/file",
+#         files=file
+#     )
+#     print(response.content)

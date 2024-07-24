@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter
 
 from app.feed_parser import RssSchema
 
@@ -26,7 +26,8 @@ async def parse_from_xml(xml: str):
     return rss
 
 
-@router.post("/parse_from/file")
-async def parse_from_file(file: UploadFile):
-    rss = RssSchema.parse_feed(file.file)
-    return rss.source
+# TODO: is worth it having this endpoing?
+# @router.post("/parse_from/file")
+# async def parse_from_file(file: UploadFile):
+#     rss = RssSchema.parse_feed(file.file)
+#     return rss.source
