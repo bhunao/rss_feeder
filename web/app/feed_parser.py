@@ -19,20 +19,19 @@ class RssSchema(SQLModel):
     articles: list[ArticleSchema]
 
     @staticmethod
-    def parse_source(parsed_rss: DICT, url: str | None = None) -> SourceSchema:
+    def parse_source(parsed_rss: DICT, url: str = "") -> SourceSchema:
         assert parsed_rss.get("feed"), "RSS has no feed key in dict."
 
         feed: DICT = parsed_rss["feed"]
         title: str = feed.get("title", "NO_TITLE")
         subtitle: str = feed.get("subtitle", "")
         language: str = feed.get("language", "")
-        _url: str = url if url else ""
 
         record = SourceSchema(
             title=title,
             subtitle=subtitle,
             language=language,
-            url=_url,
+            url=url,
         )
         return record
 
