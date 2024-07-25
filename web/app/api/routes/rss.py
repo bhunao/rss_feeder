@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi.responses import HTMLResponse, JSONResponse
 
 from app.feed_parser import RssSchema
 
@@ -14,20 +15,20 @@ EX_URL = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
 @router.post("/parse_from/url")
 async def parse_from_url(url: str = EX_URL):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
-    rss = RssSchema.parse_feed(url)
+    rss = RssSchema.from_url(url)
     return rss
 
 
-@router.post("/parse_from/xml")
-async def parse_from_xml(xml: str):
-    """Transform a RSS xml feed to json (xml -> json)"""
-    # TODO: create test for this (current test client don't accept xml only json)
-    rss = RssSchema.parse_feed(xml)
-    return rss
-
-
-# TODO: is worth it having this endpoing?
-# @router.post("/parse_from/file")
-# async def parse_from_file(file: UploadFile):
-#     rss = RssSchema.parse_feed(file.file)
-#     return rss.source
+@router.get("/tst",
+            # response_class=HTMLResponse,
+            responses={
+                200: {
+                    "content": {"text/html": {}},
+                    "description": "Return the JSON item or HTML.",
+                }
+            })
+async def tst(a: int = 0):
+    if a == 0:
+        return HTMLResponse("<html><div><h1>titulo texto</h1></div></html>")
+    else:
+        return JSONResponse({"algo": 1})

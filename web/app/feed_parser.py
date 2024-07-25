@@ -3,15 +3,13 @@ import feedparser
 
 from collections.abc import Generator
 from sqlmodel import SQLModel
-from typing import Any, BinaryIO  # pyright: ignore[reportAny]
+from typing import Any  # pyright: ignore[reportAny]
 
 from app.models import SourceSchema, ArticleSchema
 
 
 GEN_DICT = Generator[dict[str, Any], None, None]
 DICT = dict[str, Any]
-
-URL_XML_FILE = str | bytes | BinaryIO
 
 
 class RssSchema(SQLModel):
@@ -58,15 +56,25 @@ class RssSchema(SQLModel):
         return articles
 
     @staticmethod
-    def rss_dict_from(url_or_xml: URL_XML_FILE) -> DICT:
-        parsed: DICT = feedparser.parse(url_or_xml)
+    def rss_dict_from(url: str) -> DICT:
+        parsed: DICT = feedparser.parse(url)
         assert isinstance(parsed, dict)
         return parsed
 
     @classmethod
-    def parse_feed(cls, url_or_xml: URL_XML_FILE):
-        rss_dict = cls.rss_dict_from(url_or_xml)
-        source = cls.parse_source(rss_dict)
+    def from_url(cls, url: str):
+        rss_dict = cls.rss_dict_from(url)
+        source = cls.parse_source(rss_dict, url)
+        articles = cls.parse_articles(rss_dict)
+        return cls(
+            source=source,
+            articles=articles
+        )
+
+    @classmethod
+    def parse_feed(cls, url: str):
+        rss_dict = cls.rss_dict_from(url)
+        source = cls.parse_source(rss_dict, url)
         articles = cls.parse_articles(rss_dict)
         return cls(
             source=source,

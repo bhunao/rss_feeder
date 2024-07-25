@@ -1,22 +1,16 @@
-from io import StringIO
+from pprint import pprint as print
 import requests
 
 from fastapi.testclient import TestClient
 
 from app.feed_parser import RssSchema
 
-LINK = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
+LINKS = [
+    "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss",
+    "https://ge.globo.com/ESP/Noticia/Rss/0,,AS0-4433,00.xml"
+]
 
-
-def test_rss_xml(client: TestClient) -> None:
-    xml_str = requests.get(LINK).content
-    assert xml_str
-    # TODO: TestClient doesn't accept xml, only json
-    # response = client.post(
-    #     "/rss/parse_from/xml",
-    #     json=""
-    # )
-    # assert response.status_code == 200
+LINK = LINKS[1]
 
 
 def test_rss_link(client: TestClient) -> None:
@@ -25,6 +19,10 @@ def test_rss_link(client: TestClient) -> None:
         json=LINK
     )
     assert response.status_code == 200
+    print("\n\n")
+    json = response.json()
+    assert isinstance(json, dict)
+    print(json["source"])
 
 
 def test_feedparser_params() -> None:
@@ -36,13 +34,3 @@ def test_feedparser_params() -> None:
     xml = requests.get(LINK).content
     rss_schema = RssSchema.parse_feed(xml)
     assert isinstance(rss_schema, RssSchema)
-
-
-# TODO: is worth it having this endpoing?
-# def test_rss_file(client: TestClient) -> None:
-#     file = {"salve": "oi"}
-#     response = client.post(
-#         "/rss/parse_from/file",
-#         files=file
-#     )
-#     print(response.content)
