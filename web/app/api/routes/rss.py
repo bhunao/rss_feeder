@@ -14,12 +14,12 @@ router = APIRouter(
 EX_URL = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
 
 
-class GetURL(SQLModel):
+class UrlSchema(SQLModel):
     url: str = EX_URL
 
 
 @router.post("/parse_from/url")
-async def parse_from_url(url: GetURL):
+async def parse_from_url(url: UrlSchema):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
     rss = RssSchema.from_url(url.url)
     if isinstance(rss, Exception):
