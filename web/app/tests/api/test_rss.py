@@ -7,7 +7,11 @@ from app.feed_parser import RssSchema
 
 LINKS = [
     "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss",
-    "https://ge.globo.com/ESP/Noticia/Rss/0,,AS0-4433,00.xml"
+    "https://ge.globo.com/ESP/Noticia/Rss/0,,AS0-4433,00.xml",
+    "https://www.apartmenttherapy.com/main.rss",
+    "https://techcrunch.com/feed/",
+    "http://www.billboard.com/feed",
+    "https://gizmodo.com/rss",
 ]
 INVALID_LINK = "https://duckgogo.com.br"
 
@@ -42,6 +46,10 @@ def test_parse_feed() -> None:
     diferent parameter types.
 
     Test to see all the possible data that came in the xml."""
+
+    all_keys: set[str] = set()
+    missing_in: set[str] = set()
+    always_keys: set[str] = set()
     for _link in LINKS:
         rss_schema = RssSchema.rss_dict_from(_link)
         assert isinstance(rss_schema, dict)
@@ -52,8 +60,17 @@ def test_parse_feed() -> None:
         # print(["feed", rss_schema["feed"].keys()])
         # print(rss_schema["source"])
 
+        #  articles
         for entry in rss_schema["entries"]:
             entry: dict[str, str | list[dict[str, str]]]
+            keys = list(entry.keys())
+            _all = [all_keys.add(name) for name in keys]
+            _missing = {missing_in.add(name)
+                        for name in all_keys if name not in keys}
+            # print("")
+            # print("S".center(100, "="))
+            print(len(all_keys))
+            # assert entry["authors"]
             match entry:
                 case {
                     # "tags": [{"term": tags}],
@@ -78,8 +95,9 @@ def test_parse_feed() -> None:
                     ...
                 case _:
                     e = list(entry.keys())
-                    assert False, f"Invalid Key inside the `entries`: {e}"
+                    # assert False, f"Invalid Key inside the `entries`: {e}"
 
+            # source
             feed = rss_schema["feed"]
             feed: dict[str, str]
             match feed:
@@ -104,7 +122,32 @@ def test_parse_feed() -> None:
                     assert rights_detail
                     assert image
                 case _:
-                    assert False, "one of the keys are invalid inside the `feed`"
+                    e = list(entry.keys())
+                    # assert False, f"Invalid Key inside the `feed`: {e}"
+
+            # rss feed
+            match rss_schema:
+                case {
+                    "etag": etag,
+                    "href": href,
+                    "namespaces": namespaces,
+                    "version": version,
+                    "status": status,
+                    "updated": updated,
+                    "updated_parsed": updated_parsed,
+                    "encoding": encoding
+                }:
+                    assert etag is not None
+                    assert href is not None
+                    assert namespaces is not None
+                    assert version is not None
+                    assert status is not None
+                    assert updated is not None
+                    assert updated_parsed is not None
+                    assert encoding is not None
+                case _:
+                    e = list(entry.keys())
+                    # assert False, f"Invalid Key inside `rss dictionary`: {e}"
 
             # print(rss_schema.keys())
             # print(rss_schema["etag"])
@@ -125,6 +168,14 @@ def test_parse_feed() -> None:
             # print(type(rss_schema["updated_parsed"]))
             # print("")
             # print(rss_schema["encoding"])
+
+    print("")
+    print(f"{all_keys =}")
+    print("")
+    print(f"{missing_in =}")
+    print("")
+    always_keys = {name for name in all_keys if name not in missing_in}
+    print(f"{always_keys =}")
 
 
 def test_parse_feed_invalid_link() -> None:
