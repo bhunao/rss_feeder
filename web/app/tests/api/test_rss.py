@@ -13,32 +13,35 @@ LINKS = [
     "http://www.billboard.com/feed",
     "https://gizmodo.com/rss",
 ]
-INVALID_LINK = "https://duckgogo.com.br"
-
-LINK = LINKS[1]
+INVALID_LINKS = [
+    "https://duckgogo.com.br",
+    "https://google.com.br"
+]
 
 
 def test_rss_link(client: TestClient) -> None:
-    data = {"url": LINK}
-    response = client.post(
-        "/rss/parse_from/url",
-        json=data
-    )
-    assert response.status_code == 200
-    json: dict[str, str] = response.json()
-    assert isinstance(json, dict)
+    for _link in LINKS:
+        data = {"url": _link}
+        response = client.post(
+            "/rss/parse_from/url",
+            json=data
+        )
+        assert response.status_code == 200
+        json: dict[str, str] = response.json()
+        assert isinstance(json, dict)
 
 
 def test_rss_invalid_link(client: TestClient) -> None:
-    data = {"url": INVALID_LINK}
-    response = client.post(
-        "/rss/parse_from/url",
-        json=data
-    )
-    assert response.status_code == S400_INVALID_URL.status_code
-    json: dict[str, str] = response.json()
-    assert isinstance(json, dict)
-    assert json["detail"] == S400_INVALID_URL.detail
+    for _link in INVALID_LINKS:
+        data = {"url": _link}
+        response = client.post(
+            "/rss/parse_from/url",
+            json=data
+        )
+        assert response.status_code == S400_INVALID_URL.status_code
+        json: dict[str, str] = response.json()
+        assert isinstance(json, dict)
+        assert json["detail"] == S400_INVALID_URL.detail
 
 
 def test_parse_feed() -> None:
@@ -63,39 +66,37 @@ def test_parse_feed() -> None:
         #  articles
         for entry in rss_schema["entries"]:
             entry: dict[str, str | list[dict[str, str]]]
+
             keys = list(entry.keys())
-            _all = [all_keys.add(name) for name in keys]
-            _missing = {missing_in.add(name)
-                        for name in all_keys if name not in keys}
-            # print("")
-            # print("S".center(100, "="))
-            print(len(all_keys))
-            # assert entry["authors"]
+            [all_keys.add(name) for name in keys]
+            {missing_in.add(name) for name in all_keys if name not in keys}
+
+            # assert entry["summary"]
+
             match entry:
                 case {
                     # "tags": [{"term": tags}],
                     # "title": title,
                     # "title_detail": title_detail,
-                    # "summary": summary,
-                    # "summary_detail": summary_detail,
-                    # "links": links,
-                    # "link": link,
+                    "summary": summary,
+                    "summary_detail": summary_detail,
+                    "links": links,
+                    "link": link,
                     # "published": published,
                     # "published_parsed": published_parsed
                 }:
                     # assert tags
                     # assert title
                     # assert title_detail
-                    # assert summary_detail
-                    # assert summary
-                    # assert links
-                    # assert link
+                    assert summary_detail is not None
+                    assert summary is not None
+                    assert links
+                    assert link
                     # assert published
                     # assert published_parsed
-                    ...
                 case _:
                     e = list(entry.keys())
-                    # assert False, f"Invalid Key inside the `entries`: {e}"
+                    assert False, f"Invalid Key inside the `entries`: {e}"
 
             # source
             feed = rss_schema["feed"]
@@ -181,6 +182,5 @@ def test_parse_feed() -> None:
 def test_parse_feed_invalid_link() -> None:
     """Test to see if the feedparser libary under the function accept
     diferent parameter types"""
-    # xml = requests.get(LINK).content
-    rss_schema = RssSchema.rss_dict_from(INVALID_LINK)
+    rss_schema = RssSchema.rss_dict_from(INVALID_LINKS[0])
     assert isinstance(rss_schema, Exception)
