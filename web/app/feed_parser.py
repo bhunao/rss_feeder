@@ -1,4 +1,5 @@
 # import logging
+from typing_extensions import Self
 import feedparser
 
 from collections.abc import Generator
@@ -38,6 +39,12 @@ class RssSchema(SQLModel):
 
     @ staticmethod
     def parse_articles(parsed_rss: DICT) -> list[ArticleSchema]:
+        """Get the articles from the `rss_dict` and create an `ArticleSchema`
+        for each one of the valid articles.
+
+        The articles often come with missing fields so all fields must be checked
+        if exists and if its valid before trying to acess and save that data into
+        the `ArticleSchema` object."""
         articles: list[ArticleSchema] = []
         for entry in parsed_rss["entries"]:
             entry: dict[str, Any]
@@ -59,24 +66,19 @@ class RssSchema(SQLModel):
         return articles
 
     @staticmethod
-    def rss_dict_from(url: str) -> DICT:
+    def rss_dict_from(url: str) -> DICT | Exception:
         parsed: DICT = feedparser.parse(url)
         assert isinstance(parsed, dict)
+        exception: Exception | None = parsed.get("bozo_exception")
+        if exception:
+            return exception
         return parsed
 
     @classmethod
-    def from_url(cls, url: str):
+    def from_url(cls, url: str) -> Self | Exception:
         rss_dict = cls.rss_dict_from(url)
-        source = cls.parse_source(rss_dict, url)
-        articles = cls.parse_articles(rss_dict)
-        return cls(
-            source=source,
-            articles=articles
-        )
-
-    @classmethod
-    def parse_feed(cls, url: str):
-        rss_dict = cls.rss_dict_from(url)
+        if isinstance(rss_dict, Exception):
+            return rss_dict
         source = cls.parse_source(rss_dict, url)
         articles = cls.parse_articles(rss_dict)
         return cls(

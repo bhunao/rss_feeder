@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse, JSONResponse
+from sqlmodel import SQLModel
 
 from app.feed_parser import RssSchema
+from app.errors import S400_INVALID_URL
 
 
 router = APIRouter(
@@ -12,10 +14,16 @@ router = APIRouter(
 EX_URL = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
 
 
+class GetURL(SQLModel):
+    url: str = EX_URL
+
+
 @router.post("/parse_from/url")
-async def parse_from_url(url: str = EX_URL):
+async def parse_from_url(url: GetURL):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
-    rss = RssSchema.from_url(url)
+    rss = RssSchema.from_url(url.url)
+    if isinstance(rss, Exception):
+        raise S400_INVALID_URL
     return rss
 
 
