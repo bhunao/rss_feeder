@@ -20,7 +20,6 @@ async def parse_from_url(url: str = EX_URL):
 
 
 @router.get("/tst",
-            # response_class=HTMLResponse,
             responses={
                 200: {
                     "content": {"text/html": {}},
