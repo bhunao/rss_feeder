@@ -10,13 +10,14 @@ defineConstant = { DEBUG = true }
 stubPath = "src/stubs"
 
 # reportMissingImports = true
-# reportMissingTypeStubs = false
 
 pythonVersion = "3.11"
 pythonPlatform = "Linux"
 # reportGeneralTypeIssues = false
 
 # basedpyright errors and warnings
+reportMissingTypeStubs = "warning"
+
 reportUnusedVariable = "warning"
 reportUnusedImport = "warning"
 reportUnknownVariableType = "warning"
