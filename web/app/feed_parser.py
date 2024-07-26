@@ -21,17 +21,20 @@ class RssSchema(SQLModel):
         assert parsed_rss.get("feed"), "RSS has no feed key in dict."
 
         feed: DICT = parsed_rss["feed"]
-        title: str = feed.get("title", "NO_TITLE")
-        subtitle: str = feed.get("subtitle", "")
-        language: str = feed.get("language", "")
-
-        record = SourceSchema(
-            title=title,
-            subtitle=subtitle,
-            language=language,
-            url=url,
-        )
-        return record
+        match feed:
+            case {"title": title, "subtitle": subtitle, "language": lang}:
+                title: str
+                subtitle: str
+                lang: str
+                record = SourceSchema(
+                    title=title,
+                    subtitle=subtitle,
+                    language=lang,
+                    url=url,
+                )
+                return record
+            case _:
+                raise KeyError("missing something or wawhetversdasdver")
 
     @ staticmethod
     def parse_articles(parsed_rss: DICT) -> list[ArticleSchema]:
