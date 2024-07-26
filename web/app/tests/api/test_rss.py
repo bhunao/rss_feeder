@@ -41,7 +41,7 @@ def test_parse_feed() -> None:
     """Test to see if the feedparser libary under the function accept
     diferent parameter types.
 
-    Test to see all the possible data tha came in the xml."""
+    Test to see all the possible data that came in the xml."""
     for _link in LINKS:
         rss_schema = RssSchema.rss_dict_from(_link)
         assert isinstance(rss_schema, dict)
@@ -77,7 +77,8 @@ def test_parse_feed() -> None:
                     # assert published_parsed
                     ...
                 case _:
-                    assert False, f"one of the keys are invalid inside the `entries`: {list(entry.keys())}"
+                    e = list(entry.keys())
+                    assert False, f"Invalid Key inside the `entries`: {e}"
 
             feed = rss_schema["feed"]
             feed: dict[str, str]
