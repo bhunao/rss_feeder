@@ -3,7 +3,7 @@ from pprint import pprint as print
 from fastapi.testclient import TestClient
 
 from app.errors import S400_INVALID_URL
-from app.feed_parser import RssSchema
+from app.models import RssSchema
 
 LINKS = [
     "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss",

@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlmodel import SQLModel
 
-from app.feed_parser import RssSchema
+from app.models import RssSchema
 from app.errors import S400_INVALID_URL
 
 
