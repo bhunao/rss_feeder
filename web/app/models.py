@@ -63,11 +63,44 @@ class SourceSchema(SQLModel):
 
 
 class ArticleSchema(SQLModel):
+    """
+    {'articles': {
+        'author',
+        'author_detail',
+        'authors',
+        'comments',
+        'content',
+        'credit',
+        'g_image_link',
+        'guidislink',
+        'id',
+        'link',
+        'links',
+        'media_content',
+        'media_credit',
+        'post-id',
+        'published',
+        'published_parsed',
+        'slash_comments',
+        'summary',
+        'summary_detail',
+        'tags',
+        'title',
+        'title_detail',
+        'wfw_commentrss'
+        }
+    }
+    """
     source: str
-    title: str
+    title: str | None = None
     summary: str
     date_published: str
     image_url: str
+    origin_id: str | None = None
+    author: str | None = None
+    html_content: str | None = None
+    post_id: str | None = None
+    tags: str | None = None
 
     @classmethod
     def from_rss(cls, parsed_rss: DICT) -> list[ArticleSchema]:
@@ -86,6 +119,33 @@ class ArticleSchema(SQLModel):
             summary: str = entry.get("summary", "")
             date_published: str = entry.get("date_published", "")
             image_url: str = entry.get("image_url", "")
+            origin_id: str = entry.get("id", "")
+            post_id: str | None = entry.get("post-id")
+
+            author: str | None
+            html_content: str | None
+            tags: str | None
+
+            match entry:
+                case {"authors": _authors}:
+                    author = ",".join(au["name"]
+                                      for au in _authors if au.get("name"))
+                case {"authors": _authors}:
+                    author = entry.get("author", "")
+                case _:
+                    author = None
+
+            match entry:
+                case {"content": [{"value": _content}]}:
+                    html_content = _content
+                case _:
+                    html_content = None
+
+            match entry:
+                case {"tags": tags}:
+                    tags = ", ".join(t["term"] for t in tags)
+                case _:
+                    tags = None
 
             _article = cls(
                 source=source,
@@ -93,8 +153,14 @@ class ArticleSchema(SQLModel):
                 summary=summary,
                 date_published=date_published,
                 image_url=image_url,
+                origin_id=origin_id,
+                author=author,
+                html_content=html_content,
+                post_id=post_id,
+                tags=tags,
             )
             articles.append(_article)
+
         return articles
 
 
@@ -102,7 +168,7 @@ class RssSchema(SQLModel):
     source: SourceSchema
     articles: list[ArticleSchema]
 
-    @staticmethod
+    @ staticmethod
     def rss_dict_from(url: str) -> DICT | Exception:
         """Parses an RSS feed from a given URL and returns the parsed content.
 
@@ -124,7 +190,7 @@ class RssSchema(SQLModel):
             return exception
         return parsed
 
-    @classmethod
+    @ classmethod
     def from_url(cls, url: str) -> RssSchema | Exception:
         """Creates a new instance of the class `RssSchema` from the parsed
         results of the given url.
