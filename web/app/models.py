@@ -1,4 +1,5 @@
 from __future__ import annotations
+from datetime import datetime
 import logging
 import feedparser  # pyright: ignore[reportMissingTypeStubs]
 
@@ -22,6 +23,7 @@ class SourceSchema(SQLModel):
     link: str | None = None
     image: str | None = None
     sy_updateperiod: str | None = None
+    sy_updatefrequency: str | None = None
 
     @classmethod
     def from_rss(cls, parsed_rss: DICT, url: str = "") -> SourceSchema | Exception:
@@ -36,6 +38,7 @@ class SourceSchema(SQLModel):
         language: str = feed.get("language", "")
         link: str = feed.get("link", "")
         sy_updateperiod: str = feed.get("sy_updateperiod", "")
+        sy_updatefrequency: str = feed.get("sy_updatefrequency", "")
 
         image: str | None
         match feed:
@@ -58,6 +61,7 @@ class SourceSchema(SQLModel):
             link=link,
             image=image,
             sy_updateperiod=sy_updateperiod,
+            sy_updatefrequency=sy_updatefrequency,
         )
         return record
 
@@ -142,7 +146,7 @@ class ArticleSchema(SQLModel):
                     html_content = None
 
             match entry:
-                case {"tags": tags}:
+                case {"tags": list() as tags}:
                     tags = ", ".join(t["term"] for t in tags)
                 case _:
                     tags = None
@@ -165,6 +169,7 @@ class ArticleSchema(SQLModel):
 
 
 class RssSchema(SQLModel):
+    last_update: datetime | None = None
     source: SourceSchema
     articles: list[ArticleSchema]
 
@@ -201,10 +206,19 @@ class RssSchema(SQLModel):
         rss_dict = cls.rss_dict_from(url)
         if isinstance(rss_dict, Exception):
             return rss_dict
+
+        last_update = rss_dict.get("updated_parsed")
+        if last_update:
+            from datetime import datetime
+            from time import mktime
+
+            last_update = datetime.fromtimestamp(mktime(last_update))
+
         source = SourceSchema.from_rss(rss_dict, url)
         assert isinstance(source, SourceSchema), "Error creating SourceSchema."
         articles = ArticleSchema.from_rss(rss_dict)
         return cls(
+            last_update=last_update,
             source=source,
             articles=articles
         )
