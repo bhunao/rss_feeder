@@ -27,6 +27,9 @@ async def parse_from_url(url: UrlSchema):
     return rss
 
 
+html_template = "<html><div><h1>{content}</h1></div></html>".format
+
+
 @router.get("/tst",
             responses={
                 200: {
@@ -36,6 +39,6 @@ async def parse_from_url(url: UrlSchema):
             })
 async def tst(a: int = 0):
     if a == 0:
-        return HTMLResponse("<html><div><h1>titulo texto</h1></div></html>")
+        return HTMLResponse(html_template(content=a))
     else:
-        return JSONResponse({"algo": 1})
+        return JSONResponse({"algo": a})
