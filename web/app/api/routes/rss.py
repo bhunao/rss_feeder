@@ -11,7 +11,7 @@ router = APIRouter(
     tags=["rss"],
 )
 
-EX_URL = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
+EX_URL = "https://techcrunch.com/feed/"
 
 
 class UrlSchema(SQLModel):
