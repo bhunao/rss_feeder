@@ -30,6 +30,7 @@ def test_rss_link(client: TestClient) -> None:
         assert response.status_code == 200
         json: dict[str, str] = response.json()
         assert isinstance(json, dict)
+        print(json["source"])
 
 
 def test_rss_invalid_link(client: TestClient) -> None:
@@ -51,10 +52,18 @@ def test_parse_feed() -> None:
 
     Test to see all the possible data that came in the xml."""
 
+    possible_fields: dict[str, set[str]] = {
+        "rss_feed": set(),
+        "source": set(),
+        "articles": set()
+    }
     for _link in LINKS:
-        print(f"testing link: {_link}")
         rss_schema = RssSchema.rss_dict_from(_link)
         assert isinstance(rss_schema, dict)
+
+        possible_fields["rss_feed"].update(rss_schema.keys())
+        possible_fields["source"].update(rss_schema["feed"].keys())
+        possible_fields["articles"].update(rss_schema["entries"][0].keys())
 
         # rss feed
         match rss_schema:
@@ -100,7 +109,6 @@ def test_parse_feed() -> None:
             }:
                 assert title
                 assert title_detail
-                print(f"{title_detail =}")
                 # assert link
                 # assert links
                 # assert subtitle
@@ -141,6 +149,8 @@ def test_parse_feed() -> None:
                 case _:
                     e = list(entry.keys())
                     assert False, f"Invalid Key inside the `entries`: {e}"
+    print("")
+    print(possible_fields)
 
 
 def test_parse_feed_invalid_link() -> None:

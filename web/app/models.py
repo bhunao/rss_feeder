@@ -20,6 +20,8 @@ class SourceSchema(SQLModel):
     subtitle: str | None = None
     language: str | None = None
     link: str | None = None
+    image: str | None = None
+    sy_updateperiod: str | None = None
 
     @classmethod
     def from_rss(cls, parsed_rss: DICT, url: str = "") -> SourceSchema | Exception:
@@ -28,10 +30,19 @@ class SourceSchema(SQLModel):
         assert parsed_rss.get("feed"), "RSS has no feed key in dict."
 
         feed: DICT = parsed_rss["feed"]
+
         title: str = feed.get("title", "")
         subtitle: str = feed.get("subtitle", "")
         language: str = feed.get("language", "")
         link: str = feed.get("link", "")
+        sy_updateperiod: str = feed.get("sy_updateperiod", "")
+
+        image: str | None
+        match feed:
+            case {"image": {"href": image_url}}:
+                image = image_url
+            case _:
+                image = None
 
         if not title:
             NO_TITLE_SOURCE = AttributeError(
@@ -45,6 +56,8 @@ class SourceSchema(SQLModel):
             language=language,
             url=url,
             link=link,
+            image=image,
+            sy_updateperiod=sy_updateperiod,
         )
         return record
 
