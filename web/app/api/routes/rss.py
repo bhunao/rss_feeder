@@ -1,6 +1,13 @@
-from fastapi import APIRouter, UploadFile
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse, JSONResponse
+from sqlmodel import SQLModel
 
-from app.feed_parser import RssSchema
+from app.models import RssSchema
+from app.errors import S400_INVALID_URL
+from app.core.config import settings
+
+
+templates = settings.TEMPLATES
 
 
 router = APIRouter(
@@ -8,25 +15,35 @@ router = APIRouter(
     tags=["rss"],
 )
 
-EX_URL = "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss"
+EX_URL = "https://techcrunch.com/feed/"
 
 
-@router.post("/parse_from/url")
-async def parse_from_url(url: str = EX_URL):
+class UrlSchema(SQLModel):
+    url: str = EX_URL
+
+
+@ router.post("/parse_from/url")
+async def parse_from_url(url: UrlSchema):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
-    rss = RssSchema.parse_feed(url)
+    rss = RssSchema.from_url(url.url)
+    if isinstance(rss, Exception):
+        raise S400_INVALID_URL
     return rss
 
 
-@router.post("/parse_from/xml")
-async def parse_from_xml(xml: str):
-    """Transform a RSS xml feed to json (xml -> json)"""
-    # TODO: create test for this (current test client don't accept xml only json)
-    rss = RssSchema.parse_feed(xml)
-    return rss
+@ router.get("/tst",
+             response_class=HTMLResponse,
+             # responses={
+             #     200: {
+             #         "content": {"text/html": {}},
+             #         "description": "Return the JSON item or HTML.",
+             #     }
+             # }
+             )
+async def tst(request: Request, a: str = "empty"):
+    return templates.TemplateResponse(request, "index.html", context={"a": a})
+    # if len(a) < 5:
 
-
-@router.post("/parse_from/file")
-async def parse_from_file(file: UploadFile):
-    rss = RssSchema.parse_feed(file.file)
-    return rss.source
+    #     return templates.TemplateResponse(request, "index.html", context={"a": 5})
+    # else:
+    #     return JSONResponse({"algo": a})
