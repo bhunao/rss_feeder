@@ -1,17 +1,19 @@
 from pprint import pprint as print
 
-from fastapi.testclient import TestClient
+from starlette.testclient import TestClient
 
 from app.errors import S400_INVALID_URL
 from app.models import RssSchema
 
 LINKS = [
+    # TODO: download the xmls and open as files so no networking calls needed
+    # or at least less for testing parsing.
     "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss",
     "https://ge.globo.com/ESP/Noticia/Rss/0,,AS0-4433,00.xml",
     "https://www.apartmenttherapy.com/main.rss",
-    "https://techcrunch.com/feed/",
-    "http://www.billboard.com/feed",
-    "https://gizmodo.com/rss",
+    # "https://techcrunch.com/feed/",
+    # "http://www.billboard.com/feed",
+    # "https://gizmodo.com/rss",
 ]
 INVALID_LINKS = [
     "https://duckgogo.com.br",
@@ -21,7 +23,6 @@ INVALID_LINKS = [
 
 def test_rss_link(client: TestClient) -> None:
     for _link in LINKS:
-        print(f"testing link: {_link}")
         data = {"url": _link}
         response = client.post(
             "/rss/parse_from/url",
@@ -30,7 +31,8 @@ def test_rss_link(client: TestClient) -> None:
         assert response.status_code == 200
         json: dict[str, str] = response.json()
         assert isinstance(json, dict)
-        print(json["source"])
+        del json["articles"]
+        # print(json)
 
 
 def test_rss_invalid_link(client: TestClient) -> None:
@@ -149,8 +151,7 @@ def test_parse_feed() -> None:
                 case _:
                     e = list(entry.keys())
                     assert False, f"Invalid Key inside the `entries`: {e}"
-    print("")
-    print(possible_fields)
+    # print(possible_fields)
 
 
 def test_parse_feed_invalid_link() -> None:
@@ -158,3 +159,13 @@ def test_parse_feed_invalid_link() -> None:
     diferent parameter types"""
     rss_schema = RssSchema.rss_dict_from(INVALID_LINKS[0])
     assert isinstance(rss_schema, Exception)
+
+
+def test_template_response(client: TestClient):
+    response = client.get("/rss/tst",
+                          params={"a": "TEST_VALUE"})
+    assert response.status_code == 200
+    assert response.template
+    assert response.template.name == "index.html"
+    assert response.context["a"] == "TEST_VALUE"
+    # print(list(response.__dict__.items()))
