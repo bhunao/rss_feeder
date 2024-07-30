@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Request
+import logging
+from typing import Annotated, Union
+from fastapi import APIRouter, Header, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlmodel import SQLModel
 
@@ -23,9 +25,9 @@ class UrlSchema(SQLModel):
 
 
 @ router.post("/parse_from/url")
-async def parse_from_url(url: UrlSchema):
+async def parse_from_url(url: str = EX_URL):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
-    rss = RssSchema.from_url(url.url)
+    rss = RssSchema.from_url(url)
     if isinstance(rss, Exception):
         raise S400_INVALID_URL
     return rss
@@ -33,17 +35,17 @@ async def parse_from_url(url: UrlSchema):
 
 @ router.get("/tst",
              response_class=HTMLResponse,
-             # responses={
-             #     200: {
-             #         "content": {"text/html": {}},
-             #         "description": "Return the JSON item or HTML.",
-             #     }
-             # }
+             responses={
+                 200: {
+                     "content": {"application/json": {}},
+                     "description": "Return the JSON item or HTML.",
+                 }
+             }
              )
 async def tst(request: Request, a: str = "empty"):
+    logging.warning("".center(30, "="))
+    accept_value = request.headers.get("accept", None)
+    assert accept_value
+    if "application/json" in accept_value:
+        return JSONResponse({"a": a})
     return templates.TemplateResponse(request, "index.html", context={"a": a})
-    # if len(a) < 5:
-
-    #     return templates.TemplateResponse(request, "index.html", context={"a": 5})
-    # else:
-    #     return JSONResponse({"algo": a})

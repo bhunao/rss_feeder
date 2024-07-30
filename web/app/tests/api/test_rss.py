@@ -5,7 +5,7 @@ from starlette.testclient import TestClient
 from app.errors import S400_INVALID_URL
 from app.models import RssSchema
 
-LINKS = [
+VALID_URLS = [
     # TODO: download the xmls and open as files so no networking calls needed
     # or at least less for testing parsing.
     "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss",
@@ -15,18 +15,17 @@ LINKS = [
     # "http://www.billboard.com/feed",
     # "https://gizmodo.com/rss",
 ]
-INVALID_LINKS = [
+INVALID_URLS = [
     "https://duckgogo.com.br",
     "https://google.com.br"
 ]
 
 
 def test_rss_link(client: TestClient) -> None:
-    for _link in LINKS:
-        data = {"url": _link}
+    for _url in VALID_URLS:
         response = client.post(
             "/rss/parse_from/url",
-            json=data
+            params={"url": _url}
         )
         assert response.status_code == 200
         json: dict[str, str] = response.json()
@@ -36,11 +35,10 @@ def test_rss_link(client: TestClient) -> None:
 
 
 def test_rss_invalid_link(client: TestClient) -> None:
-    for _link in INVALID_LINKS:
-        data = {"url": _link}
+    for _url in INVALID_URLS:
         response = client.post(
             "/rss/parse_from/url",
-            json=data
+            params={"url": _url}
         )
         assert response.status_code == S400_INVALID_URL.status_code
         json: dict[str, str] = response.json()
@@ -59,7 +57,7 @@ def test_parse_feed() -> None:
         "source": set(),
         "articles": set()
     }
-    for _link in LINKS:
+    for _link in VALID_URLS:
         rss_schema = RssSchema.rss_dict_from(_link)
         assert isinstance(rss_schema, dict)
 
@@ -157,7 +155,7 @@ def test_parse_feed() -> None:
 def test_parse_feed_invalid_link() -> None:
     """Test to see if the feedparser libary under the function accept
     diferent parameter types"""
-    rss_schema = RssSchema.rss_dict_from(INVALID_LINKS[0])
+    rss_schema = RssSchema.rss_dict_from(INVALID_URLS[0])
     assert isinstance(rss_schema, Exception)
 
 
