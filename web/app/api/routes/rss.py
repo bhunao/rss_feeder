@@ -32,16 +32,15 @@ async def parse_from_url(url: str = EX_URL):
         raise S400_INVALID_URL
     return rss
 
+multi_responses = {
+    200: {
+        "content": {"application/json": {}},
+        "description": "Return the JSON item or HTML.",
+    }
+}
 
-@ router.get("/tst",
-             response_class=HTMLResponse,
-             responses={
-                 200: {
-                     "content": {"application/json": {}},
-                     "description": "Return the JSON item or HTML.",
-                 }
-             }
-             )
+
+@ router.get("/tst", response_class=HTMLResponse, responses=multi_responses)
 async def tst(request: Request, a: str = "empty"):
     logging.warning("".center(30, "="))
     accept_value = request.headers.get("accept", None)
