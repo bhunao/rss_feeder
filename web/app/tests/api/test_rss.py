@@ -159,11 +159,26 @@ def test_parse_feed_invalid_link() -> None:
     assert isinstance(rss_schema, Exception)
 
 
-def test_template_response(client: TestClient):
-    response = client.get("/rss/tst",
-                          params={"a": "TEST_VALUE"})
+def test_multi_content_type_endpoint(client: TestClient):
+    """Test the same endpoint with different header value for `accept`.
+    Testing the json content-type passing `application/json` in the header
+    and testing the normal endpoint without the `application/json` header
+    the endpoint must return an HTML template."""
+    response = client.get(
+        "/rss/tst",
+        params={"a": "TEST_VALUE"},
+        headers={"accept": "application/json"}
+    )
+    json_response = response.json()
+    assert response.status_code == 200
+    assert isinstance(json_response, dict)
+
+    response = client.get(
+        "/rss/tst",
+        params={"a": "TEST_VALUE"},
+    )
+
     assert response.status_code == 200
     assert response.template
     assert response.template.name == "index.html"
     assert response.context["a"] == "TEST_VALUE"
-    # print(list(response.__dict__.items()))

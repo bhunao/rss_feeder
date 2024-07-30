@@ -1,6 +1,5 @@
 import logging
-from typing import Annotated, Union
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlmodel import SQLModel
 
@@ -42,9 +41,9 @@ multi_responses = {
 
 @ router.get("/tst", response_class=HTMLResponse, responses=multi_responses)
 async def tst(request: Request, a: str = "empty"):
-    logging.warning("".center(30, "="))
-    accept_value = request.headers.get("accept", None)
-    assert accept_value
-    if "application/json" in accept_value:
-        return JSONResponse({"a": a})
-    return templates.TemplateResponse(request, "index.html", context={"a": a})
+    accept_values = request.headers.get("accept", None)
+    assert accept_values
+    context = {"a": a}
+    if "application/json" in accept_values:
+        return JSONResponse(context)
+    return templates.TemplateResponse(request, "index.html", context=context)
