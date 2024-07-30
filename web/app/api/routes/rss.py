@@ -1,4 +1,3 @@
-import logging
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlmodel import SQLModel
@@ -23,13 +22,22 @@ class UrlSchema(SQLModel):
     url: str = EX_URL
 
 
-@ router.post("/parse_from/url")
-async def parse_from_url(url: str = EX_URL):
+@ router.get("/parse_from")
+async def parse_from_url(request: Request, url: str = EX_URL):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
     rss = RssSchema.from_url(url)
-    if isinstance(rss, Exception):
-        raise S400_INVALID_URL
-    return rss
+    context = {"rss": rss}
+    accept_values = request.headers.get("accept", None)
+    assert accept_values
+    if "application/json" in accept_values:
+        if isinstance(rss, Exception):
+            raise S400_INVALID_URL
+        return rss
+
+    assert not isinstance(rss, Exception)
+    print(rss.source)
+    print(rss.last_update)
+    return templates.TemplateResponse(request, "index.html", context=context)
 
 multi_responses = {
     200: {

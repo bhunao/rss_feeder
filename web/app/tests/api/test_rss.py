@@ -23,22 +23,22 @@ INVALID_URLS = [
 
 def test_rss_link(client: TestClient) -> None:
     for _url in VALID_URLS:
-        response = client.post(
-            "/rss/parse_from/url",
-            params={"url": _url}
+        response = client.get(
+            "/rss/parse_from",
+            params={"url": _url},
+            headers={"accept": "application/json"}
         )
         assert response.status_code == 200
         json: dict[str, str] = response.json()
         assert isinstance(json, dict)
-        del json["articles"]
-        # print(json)
 
 
 def test_rss_invalid_link(client: TestClient) -> None:
     for _url in INVALID_URLS:
-        response = client.post(
-            "/rss/parse_from/url",
-            params={"url": _url}
+        response = client.get(
+            "/rss/parse_from",
+            params={"url": _url},
+            headers={"accept": "application/json"}
         )
         assert response.status_code == S400_INVALID_URL.status_code
         json: dict[str, str] = response.json()
