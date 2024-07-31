@@ -3,19 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Feeder</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   </head>
   <body>
 
 
     <div class="container p-5">
-    <h1 class="p-3">Hello, world!</h1>
       {% if a %}
       {{ a }}
       {% endif %}
 
       {% if rss %}
+      <h1 class="pb-0 display-1">RSS - {{ rss.source.title }}</h1>
+      <small class="my-4"><strong>Last update:</strong> {{ rss.last_update }}</small>
       <table class="table table-bordered">
         <thead class="thead-dark">
           <tr>
@@ -29,7 +30,14 @@
           <tr>
             <td>{{ article.title }}</td>
             <td>{{ article.author }}</td>
-            <td>{{ article.summary }}</td>
+            <td>
+              {{ article.summary | safe }}
+              {% if article.html_content and article.html_content != article.summary %}
+              html content
+              <hr>
+                {{ article.html_content | safe }}
+              {% endif %}
+            </td>
           </tr>
           {% endfor %}
         </tbody>

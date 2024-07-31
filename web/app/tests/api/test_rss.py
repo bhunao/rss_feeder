@@ -11,7 +11,7 @@ VALID_URLS = [
     "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss",
     "https://ge.globo.com/ESP/Noticia/Rss/0,,AS0-4433,00.xml",
     "https://www.apartmenttherapy.com/main.rss",
-    # "https://techcrunch.com/feed/",
+    "https://techcrunch.com/feed/",
     # "http://www.billboard.com/feed",
     # "https://gizmodo.com/rss",
 ]
@@ -165,8 +165,8 @@ def test_multi_content_type_endpoint(client: TestClient):
     and testing the normal endpoint without the `application/json` header
     the endpoint must return an HTML template."""
     response = client.get(
-        "/rss/tst",
-        params={"a": "TEST_VALUE"},
+        "/rss/parse_from",
+        params={"url": VALID_URLS[-1]},
         headers={"accept": "application/json"}
     )
     json_response = response.json()
@@ -174,11 +174,14 @@ def test_multi_content_type_endpoint(client: TestClient):
     assert isinstance(json_response, dict)
 
     response = client.get(
-        "/rss/tst",
-        params={"a": "TEST_VALUE"},
+        "/rss/parse_from",
+        params={"url": VALID_URLS[-1]},
     )
 
     assert response.status_code == 200
     assert response.template
     assert response.template.name == "index.html"
-    assert response.context["a"] == "TEST_VALUE"
+
+    rss = response.context["rss"]
+    assert isinstance(rss, RssSchema)
+    assert rss.source.title == "TechCrunch"

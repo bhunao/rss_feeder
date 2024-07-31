@@ -22,7 +22,15 @@ class UrlSchema(SQLModel):
     url: str = EX_URL
 
 
-@ router.get("/parse_from")
+multi_responses = {
+    200: {
+        "content": {"text/html": {}},
+        "description": "Returns the JSON or HTML.",
+    }
+}
+
+
+@ router.get("/parse_from", responses=multi_responses)
 async def parse_from_url(request: Request, url: str = EX_URL):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
     rss = RssSchema.from_url(url)
@@ -34,17 +42,9 @@ async def parse_from_url(request: Request, url: str = EX_URL):
             raise S400_INVALID_URL
         return rss
 
-    assert not isinstance(rss, Exception)
-    print(rss.source)
-    print(rss.last_update)
+    assert not isinstance(
+        rss, Exception), "Rss is not RssSchema, is an exception."
     return templates.TemplateResponse(request, "index.html", context=context)
-
-multi_responses = {
-    200: {
-        "content": {"application/json": {}},
-        "description": "Return the JSON item or HTML.",
-    }
-}
 
 
 @ router.get("/tst", response_class=HTMLResponse, responses=multi_responses)
