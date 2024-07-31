@@ -22,28 +22,26 @@ class UrlSchema(SQLModel):
     url: str = EX_URL
 
 
-@ router.post("/parse_from/url")
-async def parse_from_url(url: UrlSchema):
+multi_responses = {
+    200: {
+        "content": {"text/html": {}},
+        "description": "Returns the JSON or HTML.",
+    }
+}
+
+
+@ router.get("/parse_from", responses=multi_responses)
+async def parse_from_url(request: Request, url: str = EX_URL):
     """Returns a parsed dict(json) from a RSS url (url -> json)"""
-    rss = RssSchema.from_url(url.url)
-    if isinstance(rss, Exception):
-        raise S400_INVALID_URL
-    return rss
+    rss = RssSchema.from_url(url)
+    context = {"rss": rss}
+    accept_values = request.headers.get("accept", None)
+    assert accept_values
+    if "application/json" in accept_values:
+        if isinstance(rss, Exception):
+            raise S400_INVALID_URL
+        return rss
 
-
-@ router.get("/tst",
-             response_class=HTMLResponse,
-             # responses={
-             #     200: {
-             #         "content": {"text/html": {}},
-             #         "description": "Return the JSON item or HTML.",
-             #     }
-             # }
-             )
-async def tst(request: Request, a: str = "empty"):
-    return templates.TemplateResponse(request, "index.html", context={"a": a})
-    # if len(a) < 5:
-
-    #     return templates.TemplateResponse(request, "index.html", context={"a": 5})
-    # else:
-    #     return JSONResponse({"algo": a})
+    assert not isinstance(
+        rss, Exception), "Rss is not RssSchema, is an exception."
+    return templates.TemplateResponse(request, "index.html", context=context)
