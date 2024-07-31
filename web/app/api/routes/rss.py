@@ -45,13 +45,3 @@ async def parse_from_url(request: Request, url: str = EX_URL):
     assert not isinstance(
         rss, Exception), "Rss is not RssSchema, is an exception."
     return templates.TemplateResponse(request, "index.html", context=context)
-
-
-@ router.get("/tst", response_class=HTMLResponse, responses=multi_responses)
-async def tst(request: Request, a: str = "empty"):
-    accept_values = request.headers.get("accept", None)
-    assert accept_values
-    context = {"a": a}
-    if "application/json" in accept_values:
-        return JSONResponse(context)
-    return templates.TemplateResponse(request, "index.html", context=context)
