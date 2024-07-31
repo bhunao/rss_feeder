@@ -1,6 +1,5 @@
-from pprint import pprint as print
-
-from starlette.testclient import TestClient
+from typing import Any
+from fastapi.testclient import TestClient
 
 from app.errors import S400_INVALID_URL
 from app.models import RssSchema
@@ -71,23 +70,10 @@ def test_parse_feed() -> None:
                 "version": version,
                 "bozo": bozo,
                 "status": status,
-                # "etag": etag,
-                # "href": href,
-                # "namespaces": namespaces,
-                # "updated": updated,
-                # "updated_parsed": updated_parsed,
-                # "encoding": encoding
             }:
                 assert status is not None
                 assert version is not None
                 assert bozo is not None
-                # assert etag is not None
-                # assert href is not None
-                # assert namespaces is not None
-                # assert status is not None
-                # assert updated is not None
-                # assert updated_parsed is not None
-                # assert encoding is not None
             case _:
                 e = list(rss_schema.keys())
                 assert False, f"Invalid Key inside `rss dictionary`: {e}"
@@ -99,23 +85,9 @@ def test_parse_feed() -> None:
             case {
                 "title": title,
                 "title_detail": title_detail,
-                # "link": link,
-                # "links": links,
-                # "subtitle": subtitle,
-                # "language": language,
-                # "rights": rights,
-                # "rights_detail": rights_detail,
-                # "image": image
             }:
                 assert title
                 assert title_detail
-                # assert link
-                # assert links
-                # assert subtitle
-                # assert language
-                # assert rights
-                # assert rights_detail
-                # assert image
                 pass
             case _:
                 e = list(feed.keys())
@@ -131,21 +103,11 @@ def test_parse_feed() -> None:
                     "summary_detail": summary_detail,
                     "links": links,
                     "link": link,
-                    # "tags": [{"term": tags}],
-                    # "title": title,
-                    # "title_detail": title_detail,
-                    # "published": published,
-                    # "published_parsed": published_parsed
                 }:
                     assert summary_detail is not None
                     assert summary is not None
                     assert links
                     assert link
-                    # assert tags
-                    # assert title
-                    # assert title_detail
-                    # assert published
-                    # assert published_parsed
                 case _:
                     e = list(entry.keys())
                     assert False, f"Invalid Key inside the `entries`: {e}"
@@ -169,7 +131,7 @@ def test_multi_content_type_endpoint(client: TestClient):
         params={"url": VALID_URLS[-1]},
         headers={"accept": "application/json"}
     )
-    json_response = response.json()
+    json_response: dict[str, Any] = response.json()
     assert response.status_code == 200
     assert isinstance(json_response, dict)
 
